@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 
 from controllers import DataController, ProjectController
 from helpers.config import get_settings, Settings
+from helpers.utils import generate_unique_filename
 from models import FileValidationMessage
 
 data_router = APIRouter(
@@ -26,7 +27,7 @@ async def upload_data(project_id: str,
         return JSONResponse(content=message, status_code=status.HTTP_400_BAD_REQUEST)
 
     project_dir_path = ProjectController().get_project_path(project_id)
-    generated_file_info = data_controller.generate_unique_filename(file.filename, project_dir_path)
+    generated_file_info = generate_unique_filename(file.filename, project_dir_path)
     file_path = generated_file_info.get("path")
 
     try:
