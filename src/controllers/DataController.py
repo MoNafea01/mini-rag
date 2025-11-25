@@ -1,6 +1,6 @@
 from .BaseController import BaseController
 from fastapi import UploadFile
-from models import ResponseMessage, StatusEnum
+from models.enums import ResponseMessage, StatusEnum
 
 class DataController(BaseController):
     def __init__(self):

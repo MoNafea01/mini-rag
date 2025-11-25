@@ -28,7 +28,7 @@ class ChunkModel(BaseDataModel):
     
     async def insert_chunk(self, chunk: DataChunk) -> DataChunk:
         result = await self.collection.insert_one(chunk.model_dump(by_alias=True, exclude_unset=True))
-        chunk._id = result.inserted_id
+        chunk.id = result.inserted_id
         return chunk
 
     async def get_chunk(self, chunk_id: str) -> DataChunk:
@@ -52,7 +52,7 @@ class ChunkModel(BaseDataModel):
         
         return len(chunks)
     
-    async def delete_chunks_by_id(self, project_id: ObjectId):
+    async def delete_chunks_by_id(self, project_id: str):
         result = await self.collection.delete_many({'chunk_project_id': project_id})
         
         return result.deleted_count

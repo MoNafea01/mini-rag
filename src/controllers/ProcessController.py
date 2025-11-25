@@ -1,5 +1,5 @@
 import os
-from models import ProcessingEnum
+from models.enums import ProcessingEnum
 from .BaseController import BaseController
 from .ProjectController import ProjectController
 from langchain_community.document_loaders import TextLoader, PyMuPDFLoader

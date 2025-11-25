@@ -1,14 +1,15 @@
+import os
 import aiofiles as aio
 from fastapi import APIRouter, Depends, UploadFile, status, Request
 from fastapi.responses import JSONResponse
 from controllers import DataController, ProjectController, ProcessController
 from helpers.config import get_settings, Settings
 from helpers.utils import generate_unique_filepath, message_handler
-from models import ResponseMessage
-from models.ProjectModel import ProjectModel
-from models.ChunkModel import ChunkModel
-from models.db_schemas import DataChunk
-from .schemas.data import ProcessRequest
+from models.enums import ResponseMessage, AssetTypeEnum
+from models import ProjectModel, ChunkModel, AssetModel
+
+from models.db_schemas import DataChunk, Asset
+from .schemas import ProcessRequest
 
 data_router = APIRouter(
     prefix="/api/v1/data",
@@ -45,10 +46,24 @@ async def upload_data(request: Request, project_id: str,
 
     except Exception as e:
         return JSONResponse(content=ResponseMessage.FILE_UPLOADED_ERROR.value.format(filename=file_info.get("filename")), status_code=status.HTTP_400_BAD_REQUEST)
+
+    # Storing the asset info in DB
+    asset_model = await AssetModel.create_instance(
+        db_client=request.app.db_client
+    )
+    asset_resource = Asset(
+        asset_project_id=project.project_id,
+        asset_type=AssetTypeEnum.FILE.value,
+        asset_name=file_info.get("filename"),
+        asset_size=os.path.getsize(file_path),
+    )
+    
+    asset = await asset_model.create_asset(asset_resource)
     
     message = message_handler(
         ResponseMessage.FILE_UPLOADED.value.format(filename=file_info.get("filename")),
-        file_id=file_info.get("prefix")
+        file_id=str(asset.id),
+        file_name=asset.asset_name,
     )
     return JSONResponse(content=message, status_code=status.HTTP_201_CREATED)
 
@@ -88,7 +103,7 @@ async def process_data(request: Request, project_id: str,
         chunk_text=chunk.page_content,
         chunk_metadata=chunk.metadata,
         chunk_order=i+1,
-        chunk_project_id=project.id
+        chunk_project_id=project.project_id
         ) for i, chunk in enumerate(file_chunks)
     ]
     
@@ -97,7 +112,7 @@ async def process_data(request: Request, project_id: str,
     )
     
     if do_reset == 1:
-        await chunk_model.delete_chunks_by_id(project_id=project.id)
+        await chunk_model.delete_chunks_by_id(project_id=project.project_id)
         
     no_records = await chunk_model.insert_many_chunks(file_chunks_records)
     
