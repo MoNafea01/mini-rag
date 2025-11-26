@@ -12,7 +12,7 @@ class Asset(BaseModel):
     asset_name: str = Field(..., min_length=1)
     asset_type: str = Field(..., min_length=1)
     asset_size: int = Field(None, ge=0)
-    asset_config: dict = Field(default_factory=dict)
+    asset_config: Optional[dict] = Field(default_factory=dict)
     asset_pushed_at: dt = Field(default_factory=lambda: dt.now(timezone.utc))
 
     @field_validator("asset_id")

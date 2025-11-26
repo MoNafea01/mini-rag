@@ -16,6 +16,7 @@ class ProcessController(BaseController):
     def get_file_extension(self, file_id: str) -> str:
         return os.path.splitext(file_id)[-1]
 
+    
     def resolve_file_id(self, prefix: str) -> str:
         for filename in os.listdir(self.project_path):
             if filename.startswith(prefix):
