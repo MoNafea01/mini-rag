@@ -17,23 +17,44 @@ def generate_random_string(length: int = 12) -> str:
 
 
 def generate_unique_filepath(original_filename: str, project_path: str) -> str:
-        random_str = generate_random_string()
-        original_filename = get_clean_file_name(original_filename)
-        is_new = False
-        while not is_new:
-            file_path = os.path.join(project_path, f"{random_str}_{original_filename}")
-            if not os.path.exists(file_path):
-                is_new = True
-            else:
-                random_str = generate_random_string()
-        
-        return {
-            "filename": f"{original_filename}",
-            "path": file_path,
-            "prefix": random_str
-        }
+    random_str = generate_random_string()
+    original_filename = get_clean_file_name(original_filename)
+    
+    is_new = False
+    while not is_new:
+        file_path = os.path.join(project_path, f"{random_str}_{original_filename}")
+        if not os.path.exists(file_path):
+            is_new = True
+        else:
+            random_str = generate_random_string()
+    
+    return {
+        "filename": f"{original_filename}",
+        "path": file_path,
+        "prefix": random_str
+    }
 
 
 def message_handler(message: str, *args, **kwargs) -> dict:
-    message = dict(message=message, **kwargs)
+    new_kwargs = {}
+    for key, val in kwargs.items():
+        if not is_empty(val):
+            new_kwargs[key] = val
+
+    message = dict(message=message, **new_kwargs)
     return message
+
+
+def is_empty(value):
+    """Recursively determine if a value is empty."""
+    
+    if value in (None, '', [], {}, 0, '0'):
+        return True
+
+    if isinstance(value, dict):
+        return all(is_empty(v) for v in value.values())
+
+    if isinstance(value, (list, tuple, set)):
+        return all(is_empty(v) for v in value)
+
+    return False
