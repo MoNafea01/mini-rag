@@ -1,7 +1,8 @@
 import os
 import aiofiles as aio
 import logging
-from fastapi import APIRouter, Depends, UploadFile, status, Request
+from typing import List
+from fastapi import APIRouter, UploadFile, status, Request, File, Depends
 from fastapi.responses import JSONResponse
 from controllers import DataController, ProjectController, ProcessController
 from helpers.config import get_settings, Settings
@@ -22,7 +23,7 @@ data_router = APIRouter(
 
 @data_router.post("/upload/{project_id}")
 async def upload_data(request: Request, project_id: str, 
-                      file: UploadFile,
+                      files: List[UploadFile] = File(...),
                       app_settings: Settings = Depends(get_settings)):
     
     project_model = await ProjectModel.create_instance(
@@ -32,25 +33,40 @@ async def upload_data(request: Request, project_id: str,
     project = await project_model.get_project_or_create_one(project_id=project_id)
     # print(project)
     
+    if not files:
+        return JSONResponse(content={"message": "No files provided"}, status_code=status.HTTP_400_BAD_REQUEST)
+    
+    errors = []
+    uploaded_files = []
+    
     # Validate file extension
     data_controller = DataController()
-    is_valid, message = data_controller.validate_file(file)
-
-    if is_valid == False:
-        return JSONResponse(content=message, status_code=status.HTTP_400_BAD_REQUEST)
-
     project_dir_path = ProjectController().get_project_path(project_id)
-    file_info = generate_unique_filepath(file.filename, project_dir_path)
-    file_path = file_info.get("path")
+    
+    for file in files:
+        is_valid, message = data_controller.validate_file(file)
+        if not is_valid:
+            errors.append({"filename": file.filename, "error": message["message"]})
+            continue
 
-    try:
-        async with aio.open(file_path, 'wb') as out_file:
-            while chunk := await file.read(app_settings.FILE_DEFAULT_CHUNK_SIZE):
-                await out_file.write(chunk)
+        file_info = generate_unique_filepath(file.filename, project_dir_path)
+        file_path = file_info.get("path")
 
-    except Exception as e:
-        return JSONResponse(content=ResponseMessage.FILE_UPLOADED_ERROR.value.format(filename=file_info.get("filename")), status_code=status.HTTP_400_BAD_REQUEST)
+        try:
+            async with aio.open(file_path, 'wb') as out_file:
+                while chunk := await file.read(app_settings.FILE_DEFAULT_CHUNK_SIZE):
+                    await out_file.write(chunk)
+            uploaded_files.append(file_info)
 
+        except Exception as e:
+            errors.append({"filename": file.filename, "error": ResponseMessage.FILE_UPLOADED_ERROR.value.format(filename=file_info.get("filename"))})
+            if os.path.exists(file_path):
+                os.remove(file_path)
+            continue
+        
+    if not uploaded_files:
+        return JSONResponse(content={"errors": errors}, status_code=status.HTTP_400_BAD_REQUEST)
+    
     # Storing the asset info in DB
     asset_model = await AssetModel.create_instance(
         db_client=request.app.db_client
@@ -61,23 +77,34 @@ async def upload_data(request: Request, project_id: str,
         asset_type=AssetTypeEnum.FILE.value
     )
     
-    asset_full_name = f"{file_info.get('prefix')}_{file_info.get('filename')}"
-    asset_resource = Asset(
-        asset_id=f"{assets_count + 1}",
-        asset_project_id=project.project_id,
-        asset_type=AssetTypeEnum.FILE.value,
-        asset_name=asset_full_name,
-        asset_size=os.path.getsize(file_path),
-    )
+    messages = []
     
-    asset = await asset_model.create_asset(asset_resource)
-    
-    message = message_handler(
-        ResponseMessage.FILE_UPLOADED.value.format(filename=file_info.get("filename")),
-        file_id=asset.asset_id,
-        file_name=asset.asset_name,
-    )
-    return JSONResponse(content=message, status_code=status.HTTP_201_CREATED)
+    for i, file_info in enumerate(uploaded_files):
+        asset_full_name = f"{file_info.get('prefix')}_{file_info.get('filename')}"
+        file_path = file_info.get("path")
+        
+        asset_resource = Asset(
+            asset_id=f"{assets_count + 1 + i}",
+            asset_project_id=project.project_id,
+            asset_type=AssetTypeEnum.FILE.value,
+            asset_name=asset_full_name,
+            asset_size=os.path.getsize(file_path),
+        )
+        
+        asset = await asset_model.create_asset(asset_resource)
+        
+        message = message_handler(
+            ResponseMessage.FILE_UPLOADED.value.format(filename=file_info.get("filename")),
+            file_id=asset.asset_id,
+            file_name=asset.asset_name,
+        )
+        messages.append(message)
+    response_content = {"files": messages}
+    if errors:
+        response_content["errors"] = errors
+        
+    status_code = status.HTTP_201_CREATED if not errors else status.HTTP_200_OK
+    return JSONResponse(content=response_content, status_code=status_code)
 
 
 @data_router.post("/process/{project_id}")

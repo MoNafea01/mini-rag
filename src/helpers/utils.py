@@ -2,6 +2,7 @@ import re
 import os
 import random
 import string
+from typing import Dict
 
 
 def get_clean_file_name(filename: str) -> str:
@@ -16,7 +17,7 @@ def generate_random_string(length: int = 12) -> str:
     return ''.join(random.choice(letters_and_digits) for i in range(length))
 
 
-def generate_unique_filepath(original_filename: str, project_path: str) -> str:
+def generate_unique_filepath(original_filename: str, project_path: str) -> Dict[str, str]:
     random_str = generate_random_string()
     original_filename = get_clean_file_name(original_filename)
     
