@@ -1,15 +1,16 @@
 from helpers.config import Settings
-from .utils import get_all_vector_dbs
+from . import VECTOR_DB_REGISTRY
 from controllers.BaseController import BaseController
+from typing import Type
+from .VectorDBInterface import VectorDBInterface
 
 class VectorDBFactory:
     def __init__(self, settings: Settings):
         self.settings = settings
-        self._registry = get_all_vector_dbs()
         self.base_controller = BaseController()
     
-    def create(self, provider: str):
-        Provider = self._registry.get(provider)
+    def create(self, provider_cls: str):
+        Provider: Type[VectorDBInterface] = VECTOR_DB_REGISTRY.get(provider_cls)
         
         if not Provider:
             return None

@@ -1,18 +1,21 @@
 from helpers.config import Settings
-from .utils import get_all_models, get_api_key
+from .utils import ModelUtils
+from . import PROVIDER_REGISTRY
+from .LLMInterface import LLMInterface
+from typing import Type
+
 
 class LLMFactory:
     def __init__(self, settings: Settings):
         self.settings = settings
-        self._registry = get_all_models()
        
-    def create(self, provider: str):
-        Provider = self._registry.get(provider)
+    def create(self, provider_cls: str):
+        Provider: Type[LLMInterface] = PROVIDER_REGISTRY.get(provider_cls)
         
         if not Provider:
             return None
         
-        api_key = get_api_key(settings=self.settings, Provider=Provider)
+        api_key = ModelUtils.get_api_key(settings=self.settings, Provider=Provider)
         
         return Provider(
             api_key=api_key,

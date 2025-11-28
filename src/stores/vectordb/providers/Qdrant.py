@@ -2,7 +2,7 @@ from typing import List
 from qdrant_client import QdrantClient, models
 from ..VectorDBInterface import VectorDBInterface
 import logging
-from ..utils import get_all_metrics
+from ..utils import get_distance_metrics
 
 class Qdrant(VectorDBInterface):
     def __init__(self, db_path: str, distance_metric: str):
@@ -10,7 +10,7 @@ class Qdrant(VectorDBInterface):
         self.db_path = db_path
         self.distance_metric = None
         
-        metrics_map = get_all_metrics(special_map={"euclidean": "EUCLID"})
+        metrics_map = get_distance_metrics(special_map={"euclidean": "EUCLID"})
         
         if distance_metric in metrics_map:
             self.distance_metric = metrics_map[distance_metric]

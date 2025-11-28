@@ -1,8 +1,8 @@
 from ..LLMInterface import LLMInterface
 from ..LLMEnums import OPENAIRolesEnums
+from ..utils import ModelUtils
 from openai import OpenAI as OpenAIClient
 import logging
-from ..utils import ModelUtils
 
 class OpenAI(LLMInterface, ModelUtils):
     

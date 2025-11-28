@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from routes import base, data
 from motor.motor_asyncio import AsyncIOMotorClient
 from helpers.config import get_settings
-from stores.llm.LLMFactory import LLMFactory
+from stores import LLMFactory, VectorDBFactory
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -15,6 +15,7 @@ async def lifespan(app: FastAPI):
     print("✅ Connected to MongoDB")
     
     llm_factory = LLMFactory(settings)
+    vectordb_factory = VectorDBFactory(settings)
     
     # generation client
     app.generation_client = llm_factory.create(settings.GENERATION_BACKEND)
@@ -26,11 +27,19 @@ async def lifespan(app: FastAPI):
         settings.EMBEDDING_MODEL_ID, 
         settings.EMBEDDING_MODEL_SIZE)
     
+    # vector db client
+    app.vector_db_client = vectordb_factory.create(settings.VECTOR_DB_BACKEND)
+    
+    app.vector_db_client.connect()
+    print("✅ Connected to VectorDB")
+    
     yield
     
     # Shutdown
     app.mongo_conn.close()
     print("🛑 MongoDB connection closed")
+    app.vector_db_client.disconnect()
+    print("🛑 VectorDB connection closed")
 
 app = FastAPI(lifespan=lifespan)
 
