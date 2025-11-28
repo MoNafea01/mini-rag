@@ -32,7 +32,7 @@ class OpenAI(LLMInterface, ModelUtils):
         self.logger = logging.getLogger(__name__)
     
     
-    def generate_text(self, prompt: str, chat_history: list=[], max_output_tokens: int=None, temperature: float=None):
+    def generate_text(self, prompt: str, chat_history: list=None, max_output_tokens: int=None, temperature: float=None):
         if not self.client:
             self.logger.error("OpenAI client is not initialized.")
             return None
@@ -41,13 +41,14 @@ class OpenAI(LLMInterface, ModelUtils):
             self.logger.error("Generation model ID is not set.")
             return None
         
+        chat_history = chat_history or []
         max_output_tokens = max_output_tokens or self.default_generation_output_max_tokens
         temperature = temperature or self.default_generation_temperature
-        chat_history += [self.construct_prompt(prompt, role=OPENAIRolesEnums.USER.value)]
+        history = chat_history + [self.construct_prompt(prompt, role=OPENAIRolesEnums.USER.value)]
         
         response = self.client.chat.completions.create(
             model=self.generation_model_id,
-            messages=chat_history,
+            messages=history,
             max_tokens=max_output_tokens,
             temperature=temperature
         )
