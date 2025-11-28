@@ -2,8 +2,9 @@ from ..LLMInterface import LLMInterface
 from ..LLMEnums import OPENAIRolesEnums
 from openai import OpenAI as OpenAIClient
 import logging
+from ..utils import ModelUtils
 
-class OpenAI(LLMInterface):
+class OpenAI(LLMInterface, ModelUtils):
     
     def __init__(self, 
                  api_key: str, 
@@ -12,6 +13,7 @@ class OpenAI(LLMInterface):
                  default_generation_output_max_tokens: int = 1024,
                  default_generation_temperature: float = 0.1):
         
+        ModelUtils.__init__(self)
         self.api_key = api_key
         self.base_url = base_url
         

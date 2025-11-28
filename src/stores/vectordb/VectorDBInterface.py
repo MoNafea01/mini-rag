@@ -5,6 +5,10 @@ from typing import List
 class VectorDBInterface(ABC):
     
     @abstractmethod
+    def __init__(self, db_path: str, distance_metric: str):
+        pass
+    
+    @abstractmethod
     def connect(self):
         pass
     

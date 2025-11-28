@@ -2,8 +2,9 @@ from ..LLMInterface import LLMInterface
 from ..LLMEnums import CohereDocumentTypeEnums
 import cohere as CohereClient
 import logging
+from ..utils import ModelUtils
 
-class Cohere(LLMInterface):
+class Cohere(LLMInterface, ModelUtils):
     
     def __init__(self, 
                  api_key: str, 
@@ -11,6 +12,8 @@ class Cohere(LLMInterface):
                  default_input_max_characters: int = 1024,
                  default_generation_output_max_tokens: int = 1024,
                  default_generation_temperature: float = 0.1):
+        
+        ModelUtils.__init__(self)
         
         self.api_key = api_key
         

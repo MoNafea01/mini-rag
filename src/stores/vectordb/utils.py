@@ -1,9 +1,12 @@
 from .providers import Qdrant
 from .VectorDBEnums import VectorDBEnums
+from typing import Type, Dict
+from .VectorDBInterface import VectorDBInterface
+from .VectorDBEnums import DistanceMetricEnums
+from qdrant_client import models
 
-def get_all_metrics(special_map: dict = {}) -> dict:
-    from .VectorDBEnums import DistanceMetricEnums
-    from qdrant_client import models
+def get_all_metrics(special_map: dict = {}) -> Dict[str, Type[models.Distance]]:
+    
 
     mapping = {}
 
@@ -27,7 +30,7 @@ def get_all_metrics(special_map: dict = {}) -> dict:
 
     return mapping
 
-def get_all_vector_dbs() -> dict:
+def get_all_vector_dbs() -> Dict[str, Type[VectorDBInterface]]:
     vec_db_map = {
         VectorDBEnums.QDRANT.value: Qdrant
     }

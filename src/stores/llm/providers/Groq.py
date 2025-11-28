@@ -2,8 +2,9 @@ from ..LLMInterface import LLMInterface
 from ..LLMEnums import GroqRolesEnums
 from groq import Groq as GroqClient
 import logging
+from ..utils import ModelUtils
 
-class Groq(LLMInterface):
+class Groq(LLMInterface, ModelUtils):
     
     def __init__(self, 
                  api_key: str, 
@@ -12,6 +13,7 @@ class Groq(LLMInterface):
                  default_generation_output_max_tokens: int = 1024,
                  default_generation_temperature: float = 0.1):
         
+        ModelUtils.__init__(self)
         self.api_key = api_key
         
         self.default_input_max_characters = default_input_max_characters
