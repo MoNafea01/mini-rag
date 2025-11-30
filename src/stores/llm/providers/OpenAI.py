@@ -15,7 +15,9 @@ class OpenAI(LLMInterface, ModelUtils):
         
         ModelUtils.__init__(self)
         self.api_key = api_key
-        self.base_url = base_url
+        self.base_url = base_url if base_url and len(base_url) > 0 else None
+        
+        self.enums = OPENAIRolesEnums
         
         self.default_input_max_characters = default_input_max_characters
         self.default_generation_output_max_tokens = default_generation_output_max_tokens
@@ -57,7 +59,7 @@ class OpenAI(LLMInterface, ModelUtils):
             self.logger.error("Failed to get completion from OpenAI response.")
             return None
         
-        return response.choices[0].message["content"]
+        return response.choices[0].message.content
     
     
     def embed_text(self, text: str, document_type: str=None):

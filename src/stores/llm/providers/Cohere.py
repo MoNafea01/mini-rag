@@ -1,5 +1,5 @@
 from ..LLMInterface import LLMInterface
-from ..LLMEnums import CohereDocumentTypeEnums
+from ..LLMEnums import CohereDocumentTypeEnums, DocumentTypeEnums, CohereRolesEnums
 import cohere as CohereClient
 import logging
 from ..utils import ModelUtils
@@ -16,6 +16,8 @@ class Cohere(LLMInterface, ModelUtils):
         ModelUtils.__init__(self)
         
         self.api_key = api_key
+        
+        self.enums = CohereRolesEnums
         
         self.default_input_max_characters = default_input_max_characters
         self.default_generation_output_max_tokens = default_generation_output_max_tokens
@@ -69,7 +71,7 @@ class Cohere(LLMInterface, ModelUtils):
         
         (document, query) = (CohereDocumentTypeEnums.DOCUMENT.value, CohereDocumentTypeEnums.QUERY.value)
         
-        input_type = query if document_type == query else document
+        input_type = query if document_type == DocumentTypeEnums.QUERY.value else document
         
         response = self.client.embed(
             model=self.embedding_model_id,

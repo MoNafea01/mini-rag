@@ -16,6 +16,8 @@ class Groq(LLMInterface, ModelUtils):
         ModelUtils.__init__(self)
         self.api_key = api_key
         
+        self.enums = GroqRolesEnums
+        
         self.default_input_max_characters = default_input_max_characters
         self.default_generation_output_max_tokens = default_generation_output_max_tokens
         self.default_generation_temperature = default_generation_temperature

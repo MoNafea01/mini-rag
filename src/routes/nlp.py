@@ -1,11 +1,14 @@
+from typing import List
 import logging
 from fastapi import APIRouter, status, Request
 from fastapi.responses import JSONResponse
-from .schemas import PushRequest, SearchRequest
+from .schemas import PushRequest, SearchRequest, AnswerRequest
 from models import ProjectModel, ChunkModel
 from controllers import NLPController
 from models.enums import ResponseMessage
 from helpers.utils import message_handler
+from models.db_schemas import RetrievedDocument 
+
 
 logger = logging.getLogger('uvicorn.error')
 
@@ -37,7 +40,8 @@ async def index_project(request: Request, project_id: str,
     nlp_controller = NLPController(
         vectordb_client=request.app.vector_db_client,
         generation_client=request.app.generation_client,
-        embedding_client=request.app.embedding_client
+        embedding_client=request.app.embedding_client,
+        template_parser=request.app.template_parser
     )
     
     pg_num = 1
@@ -89,7 +93,8 @@ async def get_index_info(request: Request, project_id: str):
     nlp_controller = NLPController(
         vectordb_client=request.app.vector_db_client,
         generation_client=request.app.generation_client,
-        embedding_client=request.app.embedding_client
+        embedding_client=request.app.embedding_client,
+        template_parser=request.app.template_parser
     )
     
     collection_info = nlp_controller.get_vector_collection_info(project=project)
@@ -117,10 +122,13 @@ async def search_index(request: Request, project_id: str, search_request: Search
     nlp_controller = NLPController(
         vectordb_client=request.app.vector_db_client,
         generation_client=request.app.generation_client,
-        embedding_client=request.app.embedding_client
+        embedding_client=request.app.embedding_client,
+        template_parser=request.app.template_parser
     )
     
-    result = nlp_controller.search_vector_db(project=project, query_text=search_request.query, top_k=search_request.top_k)
+    result: List[RetrievedDocument] = nlp_controller.search_vector_db(project=project, query_text=search_request.query, top_k=search_request.top_k)
+    
+    result = [r.model_dump() for r in result]
     
     if not result:
         return JSONResponse(
@@ -130,5 +138,45 @@ async def search_index(request: Request, project_id: str, search_request: Search
     
     return JSONResponse(
         content=message_handler(ResponseMessage.VECTOR_DB_SEARCH_COMPLETED.value.format(project_id=project_id), search_results=result),
+        status_code=status.HTTP_200_OK
+    )
+
+
+@nlp_router.post("/index/answer/{project_id}")
+async def answer_query(request: Request, project_id: str, answer_request: AnswerRequest):
+    
+    project_model = await ProjectModel.create_instance(
+        db_client=request.app.db_client
+    )
+    
+    project = await project_model.get_project_or_create_one(project_id=project_id)
+    
+    if not project:
+        return JSONResponse(
+            content=message_handler(ResponseMessage.PROJECT_NOT_FOUND.value.format(project_id=project_id)),
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+    
+    nlp_controller = NLPController(
+        vectordb_client=request.app.vector_db_client,
+        generation_client=request.app.generation_client,
+        embedding_client=request.app.embedding_client,
+        template_parser=request.app.template_parser
+    )
+    
+    answer, full_prompt, chat_history = nlp_controller.answer_query(project=project, 
+                                                                    query_text=answer_request.query, 
+                                                                    top_k=answer_request.top_k, 
+                                                                    max_output_tokens=answer_request.max_tokens, 
+                                                                    temperature=answer_request.temperature)
+    
+    if not answer:
+        return JSONResponse(
+            content=message_handler(ResponseMessage.ANSWER_GENERATION_FAILED.value.format(project_id=project_id)),
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+    
+    return JSONResponse(
+        content=message_handler(ResponseMessage.ANSWER_GENERATION_SUCCESS.value.format(project_id=project_id), answer=answer, full_prompt=full_prompt, chat_history=chat_history),
         status_code=status.HTTP_200_OK
     )

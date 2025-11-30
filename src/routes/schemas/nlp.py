@@ -7,3 +7,9 @@ class PushRequest(BaseModel):
 class SearchRequest(BaseModel):
     query: str
     top_k: Optional[int]=5
+
+class AnswerRequest(BaseModel):
+    query: str
+    top_k: Optional[int]=5
+    temperature: Optional[float]=0.2
+    max_tokens: Optional[int]=512

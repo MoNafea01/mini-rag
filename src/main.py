@@ -4,6 +4,10 @@ from routes import base, data, nlp
 from motor.motor_asyncio import AsyncIOMotorClient
 from helpers.config import get_settings
 from stores import LLMFactory, VectorDBFactory
+from stores.llm.templates.template_parser import TemplateParser
+import logging
+
+logger = logging.getLogger('uvicorn.error')
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -12,7 +16,7 @@ async def lifespan(app: FastAPI):
     # Startup
     app.mongo_conn = AsyncIOMotorClient(settings.MONGO_URI)
     app.db_client = app.mongo_conn[settings.MONGODB_NAME]
-    print("✅ Connected to MongoDB")
+    logger.info("✅ Connected to MongoDB")
     
     llm_factory = LLMFactory(settings)
     vectordb_factory = VectorDBFactory(settings)
@@ -31,15 +35,20 @@ async def lifespan(app: FastAPI):
     app.vector_db_client = vectordb_factory.create(settings.VECTOR_DB_BACKEND)
     
     app.vector_db_client.connect()
-    print("✅ Connected to VectorDB")
+    logger.info("✅ Connected to VectorDB")
+    
+    # template parser
+    app.template_parser = TemplateParser(language=settings.PRIMARY_LANGUAGE, 
+                                         default_language=settings.DEFAULT_LANGUAGE)
+    logger.info("✅ Template parser initialized")
     
     yield
     
     # Shutdown
     app.mongo_conn.close()
-    print("🛑 MongoDB connection closed")
+    logger.info("🛑 MongoDB connection closed")
     app.vector_db_client.disconnect()
-    print("🛑 VectorDB connection closed")
+    logger.info("🛑 VectorDB connection closed")
 
 app = FastAPI(lifespan=lifespan)
 

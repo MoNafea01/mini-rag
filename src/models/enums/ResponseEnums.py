@@ -17,3 +17,6 @@ class ResponseMessage(Enum):
     VECTOR_DB_COLLECTION_INFO_RETRIEVED = "Collection info retrieved for project with ID '{project_id}'."
     VECTOR_DB_SEARCH_COMPLETED = "Search completed for project with ID '{project_id}'."
     VECTOR_DB_SEARCH_FAILED = "Vector database search failed for project with ID '{project_id}'."
+    ANSWER_GENERATION_SUCCESS = "Answer generated successfully for project with ID '{project_id}'."
+    ANSWER_GENERATION_FAILED = "Answer generation failed for project with ID '{project_id}'."
+    

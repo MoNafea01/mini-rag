@@ -1,2 +1,2 @@
 from .data import ProcessRequest
-from .nlp import PushRequest, SearchRequest
+from .nlp import PushRequest, SearchRequest, AnswerRequest
