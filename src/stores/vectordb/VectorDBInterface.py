@@ -6,7 +6,9 @@ from models.db_schemas import RetrievedDocument
 class VectorDBInterface(ABC):
     
     @abstractmethod
-    def __init__(self, db_path: str, distance_metric: str):
+    def __init__(self, 
+                 db_path: str, 
+                 distance_metric: str):
         pass
     
     @abstractmethod
@@ -65,4 +67,3 @@ class VectorDBInterface(ABC):
                          query_vector: List[float], 
                          top_k: int=5) -> List[RetrievedDocument]:
         pass
-    

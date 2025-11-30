@@ -33,7 +33,12 @@ class Cohere(LLMInterface, ModelUtils):
         self.logger = logging.getLogger(__name__)
     
     
-    def generate_text(self, prompt: str, chat_history: list=None, max_output_tokens: int=None, temperature: float=None):
+    def generate_text(self, 
+                      prompt: str, 
+                      chat_history: list=None, 
+                      max_output_tokens: int=None, 
+                      temperature: float=None):
+        
         if not self.client:
             self.logger.error("Cohere client is not initialized.")
             return None
@@ -60,7 +65,10 @@ class Cohere(LLMInterface, ModelUtils):
         return response.text
     
     
-    def embed_text(self, text: str, document_type: str=None):
+    def embed_text(self, 
+                   text: str, 
+                   document_type: str=None):
+        
         if not self.client:
             self.logger.error("Cohere client is not initialized.")
             return None
@@ -100,5 +108,8 @@ class Cohere(LLMInterface, ModelUtils):
         return text[:self.default_input_max_characters]
 
     
-    def construct_prompt(self, prompt: str, role: str):
+    def construct_prompt(self, 
+                         prompt: str, 
+                         role: str):
+        
         return {"role": role, "text": self.process_text(prompt)}

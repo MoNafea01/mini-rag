@@ -47,18 +47,24 @@ class ChunkModel(BaseDataModel):
         return None
     
     
-    async def insert_many_chunks(self, chunks: List[DataChunk], batch_size: int = 100) -> List[DataChunk]:
+    async def insert_many_chunks(self, 
+                                 chunks: List[DataChunk], 
+                                 batch_size: int = 100) -> List[DataChunk]:
+        
         for i in range(0, len(chunks), batch_size):
             batch = chunks[i: i + batch_size]
             
             ops = [
                 InsertOne(chunk.model_dump(by_alias=True, exclude_unset=True)) for chunk in batch
             ]
-            self.collection.bulk_write(ops)
+            await self.collection.bulk_write(ops)
         
         return len(chunks)
     
-    async def get_project_chunks(self, project_id: str, page: int=1, page_size: int = 50) -> List[DataChunk]:
+    async def get_project_chunks(self, 
+                                 project_id: str, 
+                                 page: int=1, 
+                                 page_size: int = 50) -> List[DataChunk]:
         
         cursor = self.collection.find({'chunk_project_id': project_id}).skip((page-1) * page_size).limit(page_size)
         

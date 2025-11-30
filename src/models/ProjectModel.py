@@ -49,7 +49,10 @@ class ProjectModel(BaseDataModel):
         return project
     
     
-    async def get_all_projects(self, page: int = 1, page_size: int = 10) -> Tuple[list, int]:
+    async def get_all_projects(self, 
+                               page: int = 1, 
+                               page_size: int = 10) -> Tuple[list, int]:
+        
         """
         Returns:\n
             - Projects (List[Porject])      

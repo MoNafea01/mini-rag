@@ -8,7 +8,12 @@ from stores.llm.templates.template_parser import TemplateParser
 import json
 
 class NLPController(BaseController):
-    def __init__(self, vectordb_client, generation_client, embedding_client, template_parser):
+    def __init__(self, 
+                 vectordb_client, 
+                 generation_client, 
+                 embedding_client, 
+                 template_parser):
+        
         super().__init__()
         
         self.vectordb_client: VectorDBInterface = vectordb_client
@@ -30,8 +35,11 @@ class NLPController(BaseController):
             json.dumps(collection_info, default=lambda o: o.__dict__)
             )
     
-    def index_into_vector_db(self, project: Project, chunks: List[DataChunk],
-                             chunks_ids: List[int], do_reset: bool=False):
+    def index_into_vector_db(self, 
+                             project: Project, 
+                             chunks: List[DataChunk],
+                             chunks_ids: List[int], 
+                             do_reset: bool=False):
         
         # get collection name
         collection_name = self.generate_collection_name(project_id=project.project_id)
@@ -63,7 +71,10 @@ class NLPController(BaseController):
         
         return True
 
-    def search_vector_db(self, project: Project, query_text: str, top_k: int =5):
+    def search_vector_db(self, 
+                         project: Project, 
+                         query_text: str, 
+                         top_k: int =5):
         collection_name = self.generate_collection_name(project_id=project.project_id)
         
         query_vector = self.embedding_client.embed_text(

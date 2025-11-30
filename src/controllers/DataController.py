@@ -10,7 +10,10 @@ class DataController(BaseController):
         self.size_scale = 2**20  # 1 MB in bytes
     
     
-    def validate_file(self, file:UploadFile) -> Tuple[bool, dict]:
+    def validate_file(self, 
+                      file:UploadFile
+                      ) -> Tuple[bool, dict]:
+        
         file_extension = file.content_type
         allowed_types = self.app_settings.FILE_ALLOWED_TYPES
         max_size = self.app_settings.FILE_MAX_SIZE_MB

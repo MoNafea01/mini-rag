@@ -15,11 +15,17 @@ class LLMInterface(ABC):
         self.embedding_size = None
     
     @abstractmethod
-    def generate_text(self, prompt: str, chat_history: list=None, max_output_tokens: int=None, temperature: float=None):
+    def generate_text(self, 
+                      prompt: str, 
+                      chat_history: list=None, 
+                      max_output_tokens: int=None, 
+                      temperature: float=None):
         pass
     
     @abstractmethod
-    def embed_text(self, text: str, document_type: str=None):
+    def embed_text(self, 
+                   text: str, 
+                   document_type: str=None):
         pass
     
     @abstractmethod

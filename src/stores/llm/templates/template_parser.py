@@ -1,10 +1,14 @@
 import os
 from string import Template
 
+
 class TemplateParser:
     current_path = os.path.dirname(os.path.abspath(__file__))
     
-    def __init__(self, language: str, default_language: str="en"):
+    def __init__(self, 
+                 language: str, 
+                 default_language: str="en"):
+        
         self.default_language = default_language
         self.language = None
         self.set_language(language)
@@ -22,7 +26,11 @@ class TemplateParser:
         self.language = self.default_language
     
     
-    def get_text(self, group: str, key: str, vars: dict=None) -> str:
+    def get_text(self, 
+                 group: str, 
+                 key: str, 
+                 vars: dict=None) -> str:
+        
         if not (group and key):
             return None
         

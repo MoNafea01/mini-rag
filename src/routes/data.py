@@ -22,7 +22,8 @@ data_router = APIRouter(
 
 
 @data_router.post("/upload/{project_id}")
-async def upload_data(request: Request, project_id: str, 
+async def upload_data(request: Request, 
+                      project_id: str, 
                       files: List[UploadFile] = File(...),
                       app_settings: Settings = Depends(get_settings)):
     
@@ -108,7 +109,8 @@ async def upload_data(request: Request, project_id: str,
 
 
 @data_router.post("/process/{project_id}")
-async def process_data(request: Request, project_id: str, 
+async def process_data(request: Request, 
+                       project_id: str, 
                        process_request: ProcessRequest):
     
     asset_name = process_request.asset_name

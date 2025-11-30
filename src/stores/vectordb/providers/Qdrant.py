@@ -6,7 +6,10 @@ from ..utils import get_distance_metrics
 from models.db_schemas import RetrievedDocument
 
 class Qdrant(VectorDBInterface):
-    def __init__(self, db_path: str, distance_metric: str):
+    def __init__(self, 
+                 db_path: str, 
+                 distance_metric: str):
+        
         self.client = None
         self.db_path = db_path
         self.distance_metric = None
