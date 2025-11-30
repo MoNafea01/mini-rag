@@ -93,7 +93,6 @@ async def get_index_info(request: Request, project_id: str):
     )
     
     collection_info = nlp_controller.get_vector_collection_info(project=project)
-    print(collection_info)
     
     return JSONResponse(
         content=message_handler(ResponseMessage.VECTOR_DB_COLLECTION_INFO_RETRIEVED.value.format(project_id=project_id), collection_info=collection_info),
