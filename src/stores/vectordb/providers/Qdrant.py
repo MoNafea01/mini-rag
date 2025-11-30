@@ -3,6 +3,7 @@ from qdrant_client import QdrantClient, models
 from ..VectorDBInterface import VectorDBInterface
 import logging
 from ..utils import get_distance_metrics
+from models.db_schemas import RetrievedDocument
 
 class Qdrant(VectorDBInterface):
     def __init__(self, db_path: str, distance_metric: str):
@@ -133,15 +134,24 @@ class Qdrant(VectorDBInterface):
     def search_by_vector(self, 
                          collection_name: str, 
                          query_vector: list,
-                         top_k: int=5) -> list:
+                         top_k: int=5) -> List[RetrievedDocument]:
         
         if not self.is_collection_exists(collection_name):
             self.logger.error(f"Cannot search Collection: {collection_name} does not exist.")
             return []
         
-        return self.client.search(
+        results = self.client.search(
             collection_name=collection_name,
             query_vector=query_vector,
             limit=top_k
             )
-    
+        
+        if not results or len(results) == 0:
+            return None
+        
+        return [
+            RetrievedDocument(
+                text=res.payload.get('text', ''),
+                score=res.score,
+            ) for res in results
+        ]
