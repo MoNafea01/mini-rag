@@ -26,6 +26,10 @@ class TemplateParser:
         if not (group and key):
             return None
         
+        # Sanitize group to prevent path traversal
+        if not group.replace('_', '').isalnum():
+            return None
+        
         vars = vars or {}
         
         language = self.language
@@ -39,9 +43,6 @@ class TemplateParser:
             return None
         
         grp_module = __import__(f"stores.llm.templates.locales.{language}.{group}", fromlist=[group])
-        
-        if not group_path:
-            return None
         
         k_attr: Template = getattr(grp_module, key, None)
         if not k_attr:

@@ -163,14 +163,20 @@ async def answer_query(request: Request, project_id: str, answer_request: Answer
         embedding_client=request.app.embedding_client,
         template_parser=request.app.template_parser
     )
-    
-    answer, full_prompt, chat_history = nlp_controller.answer_query(project=project, 
-                                                                    query_text=answer_request.query, 
-                                                                    top_k=answer_request.top_k, 
-                                                                    max_output_tokens=answer_request.max_tokens, 
-                                                                    temperature=answer_request.temperature)
-    
-    if not answer:
+    try:
+        answer, full_prompt, chat_history = nlp_controller.answer_query(project=project, 
+                                                                        query_text=answer_request.query, 
+                                                                        top_k=answer_request.top_k, 
+                                                                        max_output_tokens=answer_request.max_tokens, 
+                                                                        temperature=answer_request.temperature)
+    except Exception as e:
+        logger.error(f"Answer generation failed for project {project_id}: {str(e)}")
+        return JSONResponse(
+            content=message_handler(ResponseMessage.ANSWER_GENERATION_FAILED.value.format(project_id=project_id)),
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+        
+    if answer is None:
         return JSONResponse(
             content=message_handler(ResponseMessage.ANSWER_GENERATION_FAILED.value.format(project_id=project_id)),
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
