@@ -1,0 +1,14 @@
+{
+  "workspace": {
+    "id": "377b75b1-7a5c-48e6-a03a-6416547a3a9f"
+  },
+  "entities": {
+    "collections": [
+      "..\\postman\\collections\\mini RAG.postman_collection.json"
+    ],
+    "environments": [],
+    "specs": [],
+    "flows": [],
+    "globals": []
+  }
+}
