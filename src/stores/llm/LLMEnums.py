@@ -4,13 +4,18 @@ class LLMEnums(Enum):
     OPENAI = "OPENAI"
     GROQ = "GROQ"
     COHERE = "COHERE"
+    OLLAMA = "OLLAMA"
     
     # Upcoming
     # ANTHROPIC = "ANTHROPIC"
     # GEMINI = "GEMINI"
-    # OLLAMA = "OLLAMA"
     
 class OPENAIRolesEnums(Enum):
+    SYSTEM = "system"
+    USER = "user"
+    ASSISTANT = "assistant"
+
+class OLLAMARolesEnums(Enum):
     SYSTEM = "system"
     USER = "user"
     ASSISTANT = "assistant"

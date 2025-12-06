@@ -19,7 +19,7 @@ class LLMFactory:
         
         return Provider(
             api_key=api_key,
-            base_url=self.settings.OPENAI_API_URL,
+            base_url=self.settings.BASE_API_URL,
             default_input_max_characters=self.settings.DEFAULT_GENERATION_INPUT_MAX_CHARACTERS,
             default_generation_output_max_tokens=self.settings.DEFAULT_GENERATION_OUTPUT_MAX_TOKENS,
             default_generation_temperature=self.settings.DEFAULT_GENERATION_TEMPERATURE
