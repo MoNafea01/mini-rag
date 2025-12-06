@@ -76,12 +76,14 @@
             {
               "key": "files",
               "type": "file",
-              "src": "/C:/Users/a1mme/OneDrive/Desktop/MO/Mohamed_Nafea.pdf"
+              "src": [
+                "/D:/MO/Books/Developing_Apps_with_GPT4.pdf"
+              ]
             }
           ]
         },
         "url": {
-          "raw": "{{api}}/api/v1/data/upload/1/",
+          "raw": "{{api}}/api/v1/data/upload/1",
           "host": [
             "{{api}}"
           ],
@@ -90,8 +92,7 @@
             "v1",
             "data",
             "upload",
-            "1",
-            ""
+            "1"
           ]
         }
       },
@@ -170,7 +171,7 @@
           }
         },
         "url": {
-          "raw": "{{api}}/api/v1/data/process/1/",
+          "raw": "{{api}}/api/v1/data/process/1",
           "host": [
             "{{api}}"
           ],
@@ -179,8 +180,7 @@
             "v1",
             "data",
             "process",
-            "1",
-            ""
+            "1"
           ]
         }
       },
