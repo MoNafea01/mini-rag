@@ -43,7 +43,6 @@
           "status": "OK",
           "code": 200,
           "_postman_previewlanguage": "Text",
-          "_postman_previewtype": "html",
           "header": [
             {
               "key": "date",
@@ -134,7 +133,6 @@
           "status": "OK",
           "code": 200,
           "_postman_previewlanguage": "Text",
-          "_postman_previewtype": "html",
           "header": [
             {
               "key": "date",
@@ -219,7 +217,6 @@
           "status": "OK",
           "code": 200,
           "_postman_previewlanguage": "Text",
-          "_postman_previewtype": "html",
           "header": [
             {
               "key": "date",
@@ -304,7 +301,6 @@
           "status": "OK",
           "code": 200,
           "_postman_previewlanguage": "Text",
-          "_postman_previewtype": "html",
           "header": [
             {
               "key": "date",
@@ -382,7 +378,6 @@
           "status": "OK",
           "code": 200,
           "_postman_previewlanguage": "Text",
-          "_postman_previewtype": "html",
           "header": [
             {
               "key": "date",
@@ -412,7 +407,7 @@
         "method": "POST",
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"query\": \"does he study nlp\",\r\n    \"top_k\": 5\r\n}",
+          "raw": "{\r\n    \"query\": \"Does he study computer vision?\",\r\n    \"top_k\": 5\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -467,7 +462,6 @@
           "status": "OK",
           "code": 200,
           "_postman_previewlanguage": "json",
-          "_postman_previewtype": "html",
           "header": [
             {
               "key": "date",
@@ -499,7 +493,7 @@
         "method": "POST",
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"query\": \"هل صاحب السيرة الذاتية يذاكر حاجات متعلقة بالذكاء الاصطناعى التوليدي و وكلاء الذكاء الاصطناعى\",\r\n    \"top_k\": 5,\r\n    \"max_tokens\": 512,\r\n    \"temperature\": 0.1\r\n}",
+          "raw": "{\r\n    \"query\": \"Does he study computer vision?\",\r\n    \"top_k\": 5,\r\n    \"max_tokens\": 512,\r\n    \"temperature\": 0.1\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -554,7 +548,6 @@
           "status": "OK",
           "code": 200,
           "_postman_previewlanguage": "Text",
-          "_postman_previewtype": "html",
           "header": [
             {
               "key": "date",
@@ -607,7 +600,6 @@
           "status": "OK",
           "code": 200,
           "_postman_previewlanguage": "json",
-          "_postman_previewtype": "html",
           "header": [
             {
               "key": "date",
