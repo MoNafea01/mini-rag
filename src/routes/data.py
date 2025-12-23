@@ -23,7 +23,7 @@ data_router = APIRouter(
 
 @data_router.post("/upload/{project_id}")
 async def upload_data(request: Request, 
-                      project_id: str, 
+                      project_id: int, 
                       files: List[UploadFile] = File(...),
                       app_settings: Settings = Depends(get_settings)):
     
@@ -73,11 +73,6 @@ async def upload_data(request: Request,
         db_client=request.app.db_client
     )
     
-    assets_count = await asset_model.count_assets(
-        asset_project_id=project.project_id,
-        asset_type=AssetTypeEnum.FILE.value
-    )
-    
     messages = []
     
     for i, file_info in enumerate(uploaded_files):
@@ -85,7 +80,6 @@ async def upload_data(request: Request,
         file_path = file_info.get("path")
         
         asset_resource = Asset(
-            asset_id=f"{assets_count + 1 + i}",
             asset_project_id=project.project_id,
             asset_type=AssetTypeEnum.FILE.value,
             asset_name=asset_full_name,
@@ -110,7 +104,7 @@ async def upload_data(request: Request,
 
 @data_router.post("/process/{project_id}")
 async def process_data(request: Request, 
-                       project_id: str, 
+                       project_id: int, 
                        process_request: ProcessRequest):
     
     asset_name = process_request.asset_name
@@ -202,7 +196,7 @@ async def process_data(request: Request,
             chunk_metadata=chunk.metadata,
             chunk_order=i+1,
             chunk_project_id=project.project_id,
-            chunk_asset_id=str(idx+1),
+            chunk_asset_id=idx+1,
             ) for i, chunk in enumerate(file_chunks)
         ]
         

@@ -1,11 +1,11 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from routes import base, data, nlp
-from motor.motor_asyncio import AsyncIOMotorClient
 from helpers.config import get_settings
 from stores import LLMFactory, VectorDBFactory
 from stores.llm.templates.template_parser import TemplateParser
 import logging
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
 logger = logging.getLogger('uvicorn.error')
 
@@ -14,9 +14,15 @@ async def lifespan(app: FastAPI):
     settings = get_settings()
     
     # Startup
-    app.mongo_conn = AsyncIOMotorClient(settings.MONGO_URI)
-    app.db_client = app.mongo_conn[settings.MONGODB_NAME]
-    logger.info("✅ Connected to MongoDB")
+    pg_conn = f"postgresql+asyncpg://{settings.POSTGRES_USERNAME}:{settings.POSTGRES_PASSWORD}@{settings.POSTGRES_HOST}:{settings.POSTGRES_PORT}/{settings.POSTGRES_MAIN_DB}"
+    app.db_engine = create_async_engine(pg_conn)
+    app.db_client = async_sessionmaker(
+        app.db_engine, 
+        class_=AsyncSession,
+        expire_on_commit=False
+    )
+    
+    logger.info("✅ Connected to Database")
     
     llm_factory = LLMFactory(settings)
     vectordb_factory = VectorDBFactory(settings)
@@ -45,8 +51,8 @@ async def lifespan(app: FastAPI):
     yield
     
     # Shutdown
-    app.mongo_conn.close()
-    logger.info("🛑 MongoDB connection closed")
+    app.db_engine.dispose()
+    logger.info("🛑 Database connection closed")
     app.vector_db_client.disconnect()
     logger.info("🛑 VectorDB connection closed")
 

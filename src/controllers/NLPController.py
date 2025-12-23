@@ -21,7 +21,7 @@ class NLPController(BaseController):
         self.embedding_client: LLMInterface = embedding_client
         self.template_parser: TemplateParser = template_parser
         
-    def generate_collection_name(self, project_id: str):
+    def generate_collection_name(self, project_id: int):
         return f"collection_{project_id}".strip()
     
     def reset_db_collection(self, project: Project):
@@ -118,8 +118,12 @@ class NLPController(BaseController):
         # prepare context
         system_prompt = self.template_parser.get_text(group="rag", key="system_prompt")
         documents_prompts = '\n'.join(
-            self.template_parser.get_text(group="rag", key="document_prompt", vars={
-                "doc_num": idx + 1,"chunk_text": doc.text}) for idx, doc in enumerate(retrieved_docs))
+            self.template_parser.get_text(
+                group="rag", 
+                key="document_prompt", 
+                vars={"doc_num": idx + 1,"chunk_text": self.generation_client.process_text(doc.text)}
+            ) for idx, doc in enumerate(retrieved_docs)
+        )
         
         footer_prompt = self.template_parser.get_text(
             group="rag", key="footer_prompt", vars={"query": query_text})

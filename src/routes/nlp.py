@@ -19,7 +19,7 @@ nlp_router = APIRouter(
 
 @nlp_router.post("/index/push/{project_id}")
 async def index_project(request: Request, 
-                        project_id: str,
+                        project_id: int,
                         push_request: PushRequest):
     
     project_model = await ProjectModel.create_instance(
@@ -51,16 +51,16 @@ async def index_project(request: Request,
     idx  = 0
     
     while True:
-        chunks = await chunk_model.get_project_chunks(project_id=project.project_id, page=pg_num, page_size=pg_size)
+        paged_chunks = await chunk_model.get_project_chunks(project_id=project.project_id, page=pg_num, page_size=pg_size)
         
-        paged_chunks = chunks[(pg_num - 1) * pg_size : pg_num * pg_size]
-        if not paged_chunks:
+        if not paged_chunks or len(paged_chunks) == 0:
             break
         
-        chunks_ids = list(range(idx, idx + len(paged_chunks)))
+        pg_num += 1
         idx += len(paged_chunks)
         
-        pg_num += 1
+        chunks_ids = list(range(idx, idx + len(paged_chunks)))
+        
         is_inserted = nlp_controller.index_into_vector_db(project=project, chunks=paged_chunks, chunks_ids=chunks_ids, do_reset=push_request.do_reset)
         
         if not is_inserted:
@@ -77,7 +77,7 @@ async def index_project(request: Request,
 
 
 @nlp_router.get("/index/info/{project_id}")
-async def get_index_info(request: Request, project_id: str):
+async def get_index_info(request: Request, project_id: int):
     
     project_model = await ProjectModel.create_instance(
         db_client=request.app.db_client
@@ -107,7 +107,7 @@ async def get_index_info(request: Request, project_id: str):
 
 @nlp_router.post("/index/search/{project_id}")
 async def search_index(request: Request, 
-                       project_id: str, 
+                       project_id: int, 
                        search_request: SearchRequest):
     
     project_model = await ProjectModel.create_instance(
@@ -147,7 +147,7 @@ async def search_index(request: Request,
 
 @nlp_router.post("/index/answer/{project_id}")
 async def answer_query(request: Request, 
-                       project_id: str, 
+                       project_id: int, 
                        answer_request: AnswerRequest):
     
     project_model = await ProjectModel.create_instance(

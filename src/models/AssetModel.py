@@ -2,7 +2,8 @@ from .BaseDataModel import BaseDataModel
 from .db_schemas import Asset
 from .enums.DataBaseEnum import DataBaseEnum
 from typing import List
-
+from sqlalchemy.future import select
+from sqlalchemy import func, delete
 
 class AssetModel(BaseDataModel):
     def __init__(self, db_client: object):
@@ -12,54 +13,51 @@ class AssetModel(BaseDataModel):
     @classmethod
     async def create_instance(cls, db_client):
         isinstance = cls(db_client)
-        await isinstance.init_collection()
         return isinstance
-    
-    
-    async def init_collection(self):
-        collection_name = DataBaseEnum.COLLECTION_ASSET_NAME.value
-        all_collections = await self.db_client.list_collection_names()
-        self.collection = self.db_client[collection_name]
-        
-        if collection_name not in all_collections:
-            print(f"⏳ Initializing collection: '{collection_name}'")
-            indexes = Asset.get_indexes()
-            for index in indexes:
-                await self.collection.create_index(**index)
-    
+
          
     async def create_asset(self, asset: Asset) -> Asset:
-        result = await self.collection.insert_one(asset.model_dump(by_alias=True, exclude_unset=True))
-        asset.id = result.inserted_id
+        async with self.db_client() as session:
+            async with session.begin():
+                session.add(asset)
+            await session.commit()
+            await session.refresh(asset)
+        
         return asset
     
     
-    async def get_all_assets(self, 
-                             asset_project_id: str, 
-                             asset_type: str) -> List[Asset]:
-        
-        records =  await self.collection.find({
-            "asset_project_id": asset_project_id,
-            "asset_type": asset_type
-            }).to_list(length=None)
-        
-        return [Asset(**record) for record in records]
+    async def get_all_assets(self, asset_project_id: int, asset_type: str) -> List[Asset]:
+        async with self.db_client() as session:
+            async with session.begin():
+                query = select(Asset).where(
+                    Asset.asset_project_id == asset_project_id,
+                    Asset.asset_type == asset_type
+                )
+                result = await session.execute(query)
+                assets = result.scalars().all()
+                
+        return assets
     
-    async def count_assets(self, 
-                           asset_project_id: str, 
-                           asset_type: str) -> int:
-        
-        return await self.collection.count_documents({
-            "asset_project_id": asset_project_id,
-            "asset_type": asset_type
-        })
     
-    async def get_asset_by_name(self, 
-                                asset_name: str, 
-                                asset_project_id: str) -> Asset:
-        
-        asset_data = await self.collection.find_one({
-            "asset_name": asset_name,
-            "asset_project_id": asset_project_id
-        })
-        return Asset(**asset_data) if asset_data else None
+    async def count_assets(self, asset_project_id: int, asset_type: str) -> int:
+        async with self.db_client() as session:
+            async with session.begin():
+                query = select(func.count(Asset.asset_id)).where(
+                    Asset.asset_project_id == asset_project_id,
+                    Asset.asset_type == asset_type
+                )
+                total_assets = await session.execute(query)
+                count = total_assets.scalar_one()
+                
+        return count
+    
+    async def get_asset_by_name(self, asset_name: str, asset_project_id: int) -> Asset:
+        async with self.db_client() as session:
+            async with session.begin():
+                query = select(Asset).where(
+                    Asset.asset_name == asset_name,
+                    Asset.asset_project_id == asset_project_id
+                )
+                asset = await session.execute(query)
+                
+        return asset.scalar_one_or_none()
