@@ -55,7 +55,8 @@ class Groq(LLMInterface, ModelUtils):
             model=self.generation_model_id,
             messages=history,
             max_tokens=max_output_tokens,
-            temperature=temperature
+            temperature=temperature,
+            include_reasoning=False,
         )
         
         if not response or not response.choices or len(response.choices) == 0 or not response.choices[0].message:
