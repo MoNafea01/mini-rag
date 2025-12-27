@@ -192,11 +192,52 @@ async def search_index(request: Request,
 
 
 @nlp_router.post("/index/answer/{project_id}")
+@nlp_router.post("/index/answer")
 async def answer_query(request: Request, 
-                       project_id: Union[int, str], 
                        answer_request: AnswerRequest,
+                       project_id: Union[int, str, None] = None,
                        app_settings: Settings = Depends(get_settings)):
     
+    nlp_controller = NLPController(
+        vectordb_client=request.app.vector_db_client,
+        generation_client=request.app.generation_client,
+        embedding_client=request.app.embedding_client,
+        template_parser=request.app.template_parser
+    )
+    
+    # If no project_id provided, use simple chatbot mode (no RAG)
+    if project_id is None:
+        try:
+            answer, full_prompt, chat_history = nlp_controller.simple_chat(
+                query_text=answer_request.query,
+                max_output_tokens=answer_request.max_tokens,
+                temperature=answer_request.temperature
+            )
+            
+            if answer is None:
+                return JSONResponse(
+                    content=message_handler(ResponseMessage.ANSWER_GENERATION_FAILED.value.format(project_id="chatbot")),
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+            
+            return JSONResponse(
+                content={
+                    "message": "Chatbot response generated successfully",
+                    "mode": "chatbot",
+                    "answer": answer,
+                    "full_prompt": full_prompt,
+                    "chat_history": chat_history
+                },
+                status_code=status.HTTP_200_OK
+            )
+        except Exception as e:
+            logger.error(f"Chatbot answer generation failed: {str(e)}")
+            return JSONResponse(
+                content={"message": f"Chatbot answer generation failed: {str(e)}"},
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+    
+    # RAG mode with project_id
     if app_settings.DB_TYPE == DatabaseType.POSTGRES.value:
         try:
             project_id = int(project_id)
@@ -219,12 +260,6 @@ async def answer_query(request: Request,
             status_code=status.HTTP_404_NOT_FOUND
         )
     
-    nlp_controller = NLPController(
-        vectordb_client=request.app.vector_db_client,
-        generation_client=request.app.generation_client,
-        embedding_client=request.app.embedding_client,
-        template_parser=request.app.template_parser
-    )
     try:
         answer, full_prompt, chat_history = nlp_controller.answer_query(project=project, 
                                                                         query_text=answer_request.query, 
@@ -248,3 +283,4 @@ async def answer_query(request: Request,
         content=message_handler(ResponseMessage.ANSWER_GENERATION_SUCCESS.value.format(project_id=project_id), answer=answer, full_prompt=full_prompt, chat_history=chat_history),
         status_code=status.HTTP_200_OK
     )
+

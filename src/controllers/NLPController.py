@@ -144,3 +144,51 @@ class NLPController(BaseController):
             )
         
         return answer, full_prompt, chat_history
+    
+    
+    def simple_chat(self,
+                   query_text: str,
+                   max_output_tokens: int = 512,
+                   temperature: float = 0.2):
+        """
+        Simple chatbot without RAG - just direct conversation with the LLM
+        
+        Args:
+            query_text: User's question/message
+            max_output_tokens: Maximum tokens in response
+            temperature: Sampling temperature
+            
+        Returns:
+            Tuple of (answer, full_prompt, chat_history)
+        """
+        answer, full_prompt, chat_history = (None,) * 3
+        
+        try:
+            # Simple system prompt for chatbot mode
+            system_prompt = "You are a helpful AI assistant. Answer the user's questions clearly and concisely."
+            
+            # Chat history with system prompt
+            chat_history = [
+                self.generation_client.construct_prompt(
+                    prompt=system_prompt, 
+                    role=self.generation_client.enums.SYSTEM.value
+                ),
+            ]
+            
+            # User query is the full prompt
+            full_prompt = query_text
+            
+            # Generate answer
+            answer = self.generation_client.generate_text(
+                prompt=full_prompt,
+                chat_history=chat_history,
+                max_output_tokens=max_output_tokens,
+                temperature=temperature
+            )
+            
+        except Exception as e:
+            # Log the error but return None values
+            print(f"Error in simple_chat: {str(e)}")
+        
+        return answer, full_prompt, chat_history
+

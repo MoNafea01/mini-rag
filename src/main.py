@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from routes import base, data, nlp
+from routes import base, data, nlp, settings
 from helpers.config import get_settings
 from stores import LLMFactory, VectorDBFactory
 from stores.llm.templates.template_parser import TemplateParser
@@ -11,45 +11,76 @@ from models.enums import DatabaseType
 
 logger = logging.getLogger('uvicorn.error')
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    settings = get_settings()
+
+async def initialize_database_connection(app: FastAPI, settings):
+    """Initialize or reinitialize database connection based on DB_TYPE"""
+    # Close existing connections if they exist
+    if hasattr(app, 'db_engine') and app.db_engine:
+        await app.db_engine.dispose()
+        logger.info("🛑 Previous database engine disposed")
     
-    app.mongo_conn = AsyncIOMotorClient(settings.MONGO_URI)
+    # Initialize MongoDB connection (always available)
+    if not hasattr(app, 'mongo_conn') or app.mongo_conn is None:
+        app.mongo_conn = AsyncIOMotorClient(settings.MONGO_URI)
     
-    # Startup
+    # Initialize PostgreSQL connection (always available)
     pg_conn = f"postgresql+asyncpg://{settings.POSTGRES_USERNAME}:{settings.POSTGRES_PASSWORD}@{settings.POSTGRES_HOST}:{settings.POSTGRES_PORT}/{settings.POSTGRES_MAIN_DB}"
     app.db_engine = create_async_engine(pg_conn)
-
+    
+    # Set active db_client based on DB_TYPE
     if settings.DB_TYPE == DatabaseType.MONGODB.value:
         app.db_client = app.mongo_conn[settings.MONGODB_NAME]
+        logger.info("✅ Using MongoDB as active database")
     else:
         app.db_client = async_sessionmaker(
             app.db_engine, 
             class_=AsyncSession,
             expire_on_commit=False
-    )
-    
-    logger.info("✅ Connected to Database")
-    
+        )
+        logger.info("✅ Using PostgreSQL as active database")
+
+
+async def initialize_llm_clients(app: FastAPI, settings):
+    """Initialize or reinitialize LLM clients"""
     llm_factory = LLMFactory(settings)
-    vectordb_factory = VectorDBFactory(settings)
     
     # generation client
     app.generation_client = llm_factory.create(settings.GENERATION_BACKEND)
     app.generation_client.set_generation_model(settings.GENERATION_MODEL_ID)
+    logger.info(f"✅ Generation client initialized: {settings.GENERATION_BACKEND}")
     
     # embedding client
     app.embedding_client = llm_factory.create(settings.EMBEDDING_BACKEND)
     app.embedding_client.set_embedding_model(
         settings.EMBEDDING_MODEL_ID, 
         settings.EMBEDDING_MODEL_SIZE)
+    logger.info(f"✅ Embedding client initialized: {settings.EMBEDDING_BACKEND}")
+
+
+async def initialize_vector_db(app: FastAPI, settings):
+    """Initialize or reinitialize vector database"""
+    # Disconnect existing connection if it exists
+    if hasattr(app, 'vector_db_client') and app.vector_db_client:
+        try:
+            app.vector_db_client.disconnect()
+            logger.info("🛑 Previous VectorDB connection closed")
+        except:
+            pass
     
-    # vector db client
+    vectordb_factory = VectorDBFactory(settings)
     app.vector_db_client = vectordb_factory.create(settings.VECTOR_DB_BACKEND)
-    
     app.vector_db_client.connect()
-    logger.info("✅ Connected to VectorDB")
+    logger.info(f"✅ VectorDB connected: {settings.VECTOR_DB_BACKEND}")
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    settings = get_settings()
+    
+    # Initialize all connections
+    await initialize_database_connection(app, settings)
+    await initialize_llm_clients(app, settings)
+    await initialize_vector_db(app, settings)
     
     # template parser
     app.template_parser = TemplateParser(language=settings.PRIMARY_LANGUAGE, 
@@ -59,7 +90,7 @@ async def lifespan(app: FastAPI):
     yield
     
     # Shutdown
-    app.db_engine.dispose()
+    await app.db_engine.dispose()
     logger.info("🛑 Database connection closed")
     app.vector_db_client.disconnect()
     logger.info("🛑 VectorDB connection closed")
@@ -69,3 +100,4 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(base.base_router)
 app.include_router(data.data_router)
 app.include_router(nlp.nlp_router)
+app.include_router(settings.settings_router)

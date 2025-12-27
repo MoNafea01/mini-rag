@@ -6,10 +6,197 @@
   },
   "item": [
     {
+      "name": "Settings",
+      "item": [
+        {
+          "name": "settings",
+          "id": "0d5ba390-32ec-4216-8577-ba5ac00585dc",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api}}/api/v1/settings",
+              "host": [
+                "{{api}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "settings"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "8145312a-16a4-4537-b2a4-842686b12843",
+              "name": "settings",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{api}}/api/v1/settings",
+                  "host": [
+                    "{{api}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "settings"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "date",
+                  "value": "Sat, 27 Dec 2025 11:47:19 GMT"
+                },
+                {
+                  "key": "server",
+                  "value": "uvicorn"
+                },
+                {
+                  "key": "content-length",
+                  "value": "1159"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": "2025-12-27T11:48:29.471Z",
+              "body": "{\n    \"settings\": {\n        \"APP_NAME\": \"mini-RAG\",\n        \"APP_VERSION\": \"0.1.0\",\n        \"OPENAPI_API_KEY\": \"your..._key\",\n        \"FILE_MAX_SIZE_MB\": \"20\",\n        \"FILE_ALLOWED_TYPES\": \"[\\\"text/plain\\\", \\\"application/pdf\\\"]\",\n        \"FILE_STORAGE_PATH\": \"assets/files\",\n        \"FILE_DEFAULT_CHUNK_SIZE\": \"524288\",\n        \"DB_TYPE\": \"\\\"postgres\\\"\",\n        \"DOMAIN_NAME\": \"localhost\",\n        \"USERNAME\": \"admin\",\n        \"PASSWORD\": \"***\",\n        \"MONGO_URI\": \"mong...7007\",\n        \"MONGODB_NAME\": \"mini-rag\",\n        \"POSTGRES_HOST\": \"localhost\",\n        \"POSTGRES_PORT\": \"5400\",\n        \"POSTGRES_MAIN_DB\": \"minirag\",\n        \"POSTGRES_USERNAME\": \"postgres\",\n        \"POSTGRES_PASSWORD\": \"***\",\n        \"GENERATION_BACKEND\": \"GROQ\",\n        \"EMBEDDING_BACKEND\": \"COHERE\",\n        \"OPENAI_API_KEY\": \"sk-p...2CsA\",\n        \"COHERE_API_KEY\": \"ex38...ZlUo\",\n        \"GROQ_API_KEY\": \"gsk_...zut2\",\n        \"BASE_API_URL\": \"https://c002eef68d22.ngrok-free.app\",\n        \"GENERATION_MODEL_ID\": \"qwen/qwen3-32b\",\n        \"EMBEDDING_MODEL_ID\": \"embed-multilingual-light-v3.0\",\n        \"EMBEDDING_MODEL_SIZE\": \"384\",\n        \"DEFAULT_GENERATION_TEMPERATURE\": \"0.1\",\n        \"DEFAULT_GENERATION_OUTPUT_MAX_TOKENS\": \"***\",\n        \"DEFAULT_GENERATION_INPUT_MAX_CHARACTERS\": \"4096\",\n        \"VECTOR_DB_BACKEND\": \"QDRANT\",\n        \"VECTOR_DB_PATH\": \"assets/database\",\n        \"VECTOR_DB_PATH_NAME\": \"qdrant_db\",\n        \"VECTOR_DB_DISTANCE_METRIC\": \"cosine\",\n        \"PRIMARY_LANGUAGE\": \"ar\",\n        \"DEFAULT_LANGUAGE\": \"en\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "reload_when_change_manually",
+          "id": "9dba5cdf-ba07-450a-b97c-bf19d004f232",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{api}}/api/v1/settings/reload",
+              "host": [
+                "{{api}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "settings",
+                "reload"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "1e8e0262-174b-4148-82f7-a6c4f5f50492",
+              "name": "reload",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{api}}/api/v1/settings/reload",
+                  "host": [
+                    "{{api}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "settings",
+                    "reload"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "date",
+                  "value": "Sat, 27 Dec 2025 12:00:09 GMT"
+                },
+                {
+                  "key": "server",
+                  "value": "uvicorn"
+                },
+                {
+                  "key": "content-length",
+                  "value": "168"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": "2025-12-27T12:02:29.268Z",
+              "body": "{\n    \"message\": \"Settings and connections reloaded successfully\",\n    \"active_db\": \"mongodb\",\n    \"generation_backend\": \"GROQ\",\n    \"embedding_backend\": \"COHERE\",\n    \"vector_db_backend\": \"QDRANT\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "active_schema",
+          "id": "7a5c608b-1ce7-4524-8858-0bb17987cd69",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api}}/api/v1/settings/active",
+              "host": [
+                "{{api}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "settings",
+                "active"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update_schema",
+          "id": "5ae5eecf-3b70-4dc6-a627-4e88e199c4fb",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"settings\": {\r\n        \"GENERATION_MODEL_ID\": \"openai/gpt-oss-120b\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{api}}/api/v1/settings",
+              "host": [
+                "{{api}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "settings"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "7ab2b775-900f-445c-8f69-264958e2faf0"
+    },
+    {
       "name": "welcome-request",
       "id": "9b6a4952-747f-497d-b6d8-abe883e3a304",
       "request": {
         "method": "GET",
+        "header": [],
         "url": {
           "raw": "{{api}}/api/v1/",
           "host": [
@@ -28,6 +215,7 @@
           "name": "welcome-request",
           "originalRequest": {
             "method": "GET",
+            "header": [],
             "url": {
               "raw": "{{api}}/api/v1/",
               "host": [
@@ -61,6 +249,7 @@
               "value": "application/json"
             }
           ],
+          "cookie": [],
           "body": "{\n    \"app_name\": \"mini-RAG\",\n    \"app_version\": \"0.1.0\"\n}"
         }
       ]
@@ -70,6 +259,7 @@
       "id": "74daabc3-d758-4220-9ec8-b860ca363af1",
       "request": {
         "method": "POST",
+        "header": [],
         "body": {
           "mode": "formdata",
           "formdata": [
@@ -102,6 +292,7 @@
           "name": "upload_file",
           "originalRequest": {
             "method": "POST",
+            "header": [],
             "body": {
               "mode": "formdata",
               "formdata": [
@@ -152,6 +343,7 @@
               "value": "application/json"
             }
           ],
+          "cookie": [],
           "body": "{\n    \"files\": [\n        {\n            \"message\": \"File 'Degrees.pdf' uploaded successfully.\",\n            \"file_id\": \"1\",\n            \"file_name\": \"GwG7jLppm03B_Degrees.pdf\"\n        },\n        {\n            \"message\": \"File 'logs.txt' uploaded successfully.\",\n            \"file_id\": \"2\",\n            \"file_name\": \"r9IdjnzvvV3x_logs.txt\"\n        },\n        {\n            \"message\": \"File 'Mohamed_Nafea.pdf' uploaded successfully.\",\n            \"file_id\": \"3\",\n            \"file_name\": \"DPn6sBGPy9Sa_Mohamed_Nafea.pdf\"\n        }\n    ],\n    \"errors\": [\n        {\n            \"filename\": \"download.jpg\",\n            \"error\": \"File type 'image/jpeg' is not allowed. Allowed types: text/plain, application/pdf\"\n        }\n    ]\n}"
         }
       ]
@@ -161,6 +353,7 @@
       "id": "d810f48a-cf00-4535-8fa8-c0219b8f9c91",
       "request": {
         "method": "POST",
+        "header": [],
         "body": {
           "mode": "raw",
           "raw": "{\r\n    // \"asset_name\":\"\",\r\n    \"chunk_size\": 400,\r\n    \"overlap_size\": 20,\r\n    \"do_reset\": 1\r\n}",
@@ -190,6 +383,7 @@
           "name": "process_file",
           "originalRequest": {
             "method": "POST",
+            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\r\n    \"file_id\": \"CfeH9xjQVo8J\",\r\n    \"chunk_size\": 400,\r\n    \"overlap_size\": 20,\r\n    \"do_reset\": 1\r\n}",
@@ -235,6 +429,7 @@
               "value": "application/json"
             }
           ],
+          "cookie": [],
           "body": "{\n    \"message\": \"File processed successfully.\",\n    \"file_id\": \"CfeH9xjQVo8J\",\n    \"file_chunks\": [\n        {\n            \"page_content\": \"Mohamed K. Nafea \\nAI Engineer \\n+20 1129330746 – Cairo, Egypt \\nEmail      : monafe301@gmail.com  \\nGitHub : github.com/MoNafea01  \\nLinkedIn : linkedin.com/in/monafea01 \\nKaggle  : kaggle.com/mohamednafea01 \\nMilitary Status: Permanently Exempted \\nSummary \\nA motivated AI Engineer with experience in Computer Vision, Generative AI, and Electronics. Proven track record of\",\n            \"metadata\": {\n                \"source\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"file_path\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"page\": 0,\n                \"total_pages\": 2,\n                \"format\": \"PDF 1.7\",\n                \"title\": \"\",\n                \"author\": \"20812020100169\",\n                \"subject\": \"\",\n                \"keywords\": \"\",\n                \"creator\": \"Microsoft® Word for Microsoft 365\",\n                \"producer\": \"Microsoft® Word for Microsoft 365\",\n                \"creationDate\": \"D:20251120230707+02'00'\",\n                \"modDate\": \"D:20251120230707+02'00'\",\n                \"trapped\": \"\"\n            },\n            \"type\": \"Document\"\n        },\n        {\n            \"page_content\": \"delivering hands-on projects in Face Recognition, Agentic RAG, and Robotics. Proficient in Python, TensorFlow, \\nPyTorch, OpenCV, LangChain, and other relevant technologies. Strong problem-solving, communication, and time \\nmanagement skills. \\nEducation \\nB.Eng. Computer & Systems Engineering \\nZagazig University – Zagazig (Oct 2020 – Jul 2025) – GPA: 3.0 \\nWork Experience \\nAI Engineer (Freelance)\",\n            \"metadata\": {\n                \"source\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"file_path\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"page\": 0,\n                \"total_pages\": 2,\n                \"format\": \"PDF 1.7\",\n                \"title\": \"\",\n                \"author\": \"20812020100169\",\n                \"subject\": \"\",\n                \"keywords\": \"\",\n                \"creator\": \"Microsoft® Word for Microsoft 365\",\n                \"producer\": \"Microsoft® Word for Microsoft 365\",\n                \"creationDate\": \"D:20251120230707+02'00'\",\n                \"modDate\": \"D:20251120230707+02'00'\",\n                \"trapped\": \"\"\n            },\n            \"type\": \"Document\"\n        },\n        {\n            \"page_content\": \"IDentFace – Remote (Oct 2024 – Nov 2024) \\n- \\nDeveloped a Face Recognition system with human feedback and version-controlled embeddings. \\n- \\nDesigned system logic enabling multiple embedding approaches and adaptive user updates. \\n- \\nBuilt robust registration and verification pipelines, improving handling of uncentered, multiple, or missing faces. \\n-\",\n            \"metadata\": {\n                \"source\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"file_path\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"page\": 0,\n                \"total_pages\": 2,\n                \"format\": \"PDF 1.7\",\n                \"title\": \"\",\n                \"author\": \"20812020100169\",\n                \"subject\": \"\",\n                \"keywords\": \"\",\n                \"creator\": \"Microsoft® Word for Microsoft 365\",\n                \"producer\": \"Microsoft® Word for Microsoft 365\",\n                \"creationDate\": \"D:20251120230707+02'00'\",\n                \"modDate\": \"D:20251120230707+02'00'\",\n                \"trapped\": \"\"\n            },\n            \"type\": \"Document\"\n        },\n        {\n            \"page_content\": \"- \\nAchieved 87.2% accuracy score on LFW dataset using deep learning and computer vision techniques. \\nProjects \\n• \\nAINO – A No Code Platform for AI Development – Link | Demo \\nZagazig University – Graduation Project (Nov 2024 – Aug 2025) \\n• \\nRanked among the Top 10 Graduation projects out of 200+ at the Egypt IOT & AI Challenge \\n• \\nExcellence Degree (196/200) \\nBackend Developer \\n-\",\n            \"metadata\": {\n                \"source\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"file_path\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"page\": 0,\n                \"total_pages\": 2,\n                \"format\": \"PDF 1.7\",\n                \"title\": \"\",\n                \"author\": \"20812020100169\",\n                \"subject\": \"\",\n                \"keywords\": \"\",\n                \"creator\": \"Microsoft® Word for Microsoft 365\",\n                \"producer\": \"Microsoft® Word for Microsoft 365\",\n                \"creationDate\": \"D:20251120230707+02'00'\",\n                \"modDate\": \"D:20251120230707+02'00'\",\n                \"trapped\": \"\"\n            },\n            \"type\": \"Document\"\n        },\n        {\n            \"page_content\": \"- \\nDesigned the Overall Software Architecture (Service & Repository Layers) for modular AI node interaction.  \\n- \\nImplemented Backend using Django RESTful framework, enabling scalable and secure API-driven workflows. \\n- \\nCreated a file conversion script to convert between standard JSON and the platform-specific AINOPRJ format. \\n-\",\n            \"metadata\": {\n                \"source\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"file_path\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"page\": 0,\n                \"total_pages\": 2,\n                \"format\": \"PDF 1.7\",\n                \"title\": \"\",\n                \"author\": \"20812020100169\",\n                \"subject\": \"\",\n                \"keywords\": \"\",\n                \"creator\": \"Microsoft® Word for Microsoft 365\",\n                \"producer\": \"Microsoft® Word for Microsoft 365\",\n                \"creationDate\": \"D:20251120230707+02'00'\",\n                \"modDate\": \"D:20251120230707+02'00'\",\n                \"trapped\": \"\"\n            },\n            \"type\": \"Document\"\n        },\n        {\n            \"page_content\": \"- \\nDeveloped a custom CLI tool supporting full CRUD operations that communicates with backend server.  \\nStack: Django, Restful API, PostgreSQL, FastAPI, Uvicorn, Pydantic \\nAI Engineer & Team Lead \\n- \\nDeveloped a Multi-Agent AI solution capable of interacting with user & pipelines execution via CLI tool. \\n- \\nLed the team as Project Leader, managing development progress and task distribution.\",\n            \"metadata\": {\n                \"source\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"file_path\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"page\": 0,\n                \"total_pages\": 2,\n                \"format\": \"PDF 1.7\",\n                \"title\": \"\",\n                \"author\": \"20812020100169\",\n                \"subject\": \"\",\n                \"keywords\": \"\",\n                \"creator\": \"Microsoft® Word for Microsoft 365\",\n                \"producer\": \"Microsoft® Word for Microsoft 365\",\n                \"creationDate\": \"D:20251120230707+02'00'\",\n                \"modDate\": \"D:20251120230707+02'00'\",\n                \"trapped\": \"\"\n            },\n            \"type\": \"Document\"\n        },\n        {\n            \"page_content\": \"Stack: LangChain, Gradio, Gemini API, Scikit-Learn, NumPy, Pandas, TensorFlow, Keras, OpenCV \\n• \\nGarbage Classifier using CNN & RF – Link \\nNTI Mansoura – Final Project (Jul 2024 – Aug 2024) \\nAchieved 74% accuracy without data augmentation on Garbage Classification dataset. Used multiple model combinations\",\n            \"metadata\": {\n                \"source\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"file_path\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"page\": 0,\n                \"total_pages\": 2,\n                \"format\": \"PDF 1.7\",\n                \"title\": \"\",\n                \"author\": \"20812020100169\",\n                \"subject\": \"\",\n                \"keywords\": \"\",\n                \"creator\": \"Microsoft® Word for Microsoft 365\",\n                \"producer\": \"Microsoft® Word for Microsoft 365\",\n                \"creationDate\": \"D:20251120230707+02'00'\",\n                \"modDate\": \"D:20251120230707+02'00'\",\n                \"trapped\": \"\"\n            },\n            \"type\": \"Document\"\n        },\n        {\n            \"page_content\": \"and concluded that CNN as a feature extractor with RF and Grid Search generalizes best among all models. \\nStack: TensorFlow, Keras, Scikit-Learn, Matplotlib, NumPy, Pandas \\n• \\nFine-Tuning GPT-2 for Creative Content Writing – Link \\nDEPI Zagazig – Final Project (Oct 2024 – Nov 2024) \\nFine-Tuned GPT-2 for creative writing applications using advanced natural language processing techniques.\",\n            \"metadata\": {\n                \"source\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"file_path\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"page\": 0,\n                \"total_pages\": 2,\n                \"format\": \"PDF 1.7\",\n                \"title\": \"\",\n                \"author\": \"20812020100169\",\n                \"subject\": \"\",\n                \"keywords\": \"\",\n                \"creator\": \"Microsoft® Word for Microsoft 365\",\n                \"producer\": \"Microsoft® Word for Microsoft 365\",\n                \"creationDate\": \"D:20251120230707+02'00'\",\n                \"modDate\": \"D:20251120230707+02'00'\",\n                \"trapped\": \"\"\n            },\n            \"type\": \"Document\"\n        },\n        {\n            \"page_content\": \"Stack: NLTK, Pandas, Pyngrok, MLflow, Transformers, PyTorch, Gradio \\n• \\nAustralian Weather Prediction – Link \\nIBM – Side Project (Apr 2025 – May 2025) \\n- \\nApplied data cleaning, feature engineering, and model selection techniques to improve prediction accuracy.\",\n            \"metadata\": {\n                \"source\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"file_path\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"page\": 0,\n                \"total_pages\": 2,\n                \"format\": \"PDF 1.7\",\n                \"title\": \"\",\n                \"author\": \"20812020100169\",\n                \"subject\": \"\",\n                \"keywords\": \"\",\n                \"creator\": \"Microsoft® Word for Microsoft 365\",\n                \"producer\": \"Microsoft® Word for Microsoft 365\",\n                \"creationDate\": \"D:20251120230707+02'00'\",\n                \"modDate\": \"D:20251120230707+02'00'\",\n                \"trapped\": \"\"\n            },\n            \"type\": \"Document\"\n        },\n        {\n            \"page_content\": \"- \\nImplemented and evaluated multiple ML algorithms (Logistic Regression, Decision Trees, Random Forest, XGBoost), \\nachieving 85% accuracy score on the test set. \\nStack: NumPy, Pandas, Matplotlib, Scikit-learn \\n• \\nLeague of Legends Match Predictor – Link \\nIBM – Side Project (Apr 2025 – May 2025) \\nDeveloped a logistic regression model to predict match outcomes using PyTorch.\",\n            \"metadata\": {\n                \"source\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"file_path\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"page\": 1,\n                \"total_pages\": 2,\n                \"format\": \"PDF 1.7\",\n                \"title\": \"\",\n                \"author\": \"20812020100169\",\n                \"subject\": \"\",\n                \"keywords\": \"\",\n                \"creator\": \"Microsoft® Word for Microsoft 365\",\n                \"producer\": \"Microsoft® Word for Microsoft 365\",\n                \"creationDate\": \"D:20251120230707+02'00'\",\n                \"modDate\": \"D:20251120230707+02'00'\",\n                \"trapped\": \"\"\n            },\n            \"type\": \"Document\"\n        },\n        {\n            \"page_content\": \"Stack: PyTorch, NumPy, Pandas, Matplotlib, Scikit-learn \\nTraining & Internships \\n• \\nArtificial Intelligence Engineer \\nIBM – Remote (Mar 2025 – Jun 2025) \\nGained hands-on experience with machine learning algorithms, deep learning architectures, and advanced frameworks \\nincluding TensorFlow, Keras, and PyTorch. Covered regression & classification, transformers, GANs, diffusion models,\",\n            \"metadata\": {\n                \"source\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"file_path\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"page\": 1,\n                \"total_pages\": 2,\n                \"format\": \"PDF 1.7\",\n                \"title\": \"\",\n                \"author\": \"20812020100169\",\n                \"subject\": \"\",\n                \"keywords\": \"\",\n                \"creator\": \"Microsoft® Word for Microsoft 365\",\n                \"producer\": \"Microsoft® Word for Microsoft 365\",\n                \"creationDate\": \"D:20251120230707+02'00'\",\n                \"modDate\": \"D:20251120230707+02'00'\",\n                \"trapped\": \"\"\n            },\n            \"type\": \"Document\"\n        },\n        {\n            \"page_content\": \"reinforcement learning, and optimization techniques. \\n• \\nGenerative AI Specialist \\nDigital Egypt Pioneer Initiative (DEPI) – Zagazig (Apr 2024 – Oct 2024) \\nCovered NLP, Computer Vision, Generative models (GANs, VAEs, Diffusion Models), and RAG systems. Applied large \\nlanguage models (GPT, BERT, T5) for fine-tuning and deployment. \\n• \\nMachine Learning for Data Analysis\",\n            \"metadata\": {\n                \"source\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"file_path\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"page\": 1,\n                \"total_pages\": 2,\n                \"format\": \"PDF 1.7\",\n                \"title\": \"\",\n                \"author\": \"20812020100169\",\n                \"subject\": \"\",\n                \"keywords\": \"\",\n                \"creator\": \"Microsoft® Word for Microsoft 365\",\n                \"producer\": \"Microsoft® Word for Microsoft 365\",\n                \"creationDate\": \"D:20251120230707+02'00'\",\n                \"modDate\": \"D:20251120230707+02'00'\",\n                \"trapped\": \"\"\n            },\n            \"type\": \"Document\"\n        },\n        {\n            \"page_content\": \"National Telecommunication Institute (NTI) – Mansoura (Jul 2024 – Sep 2024) \\nFocused on exploratory data analysis, preprocessing, supervised/unsupervised learning, CNNs, and transfer learning for image-\\nbased projects. \\n \\n        \\nSkills \\n• \\nSoftware Engineering: OS, Data Bases, Algorithms, Data Structures, Networks, OOP, Python, Java, C, MATLAB, \\nArduino \\n• \\nMachine Learning & Deep Learning: \\n-\",\n            \"metadata\": {\n                \"source\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"file_path\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"page\": 1,\n                \"total_pages\": 2,\n                \"format\": \"PDF 1.7\",\n                \"title\": \"\",\n                \"author\": \"20812020100169\",\n                \"subject\": \"\",\n                \"keywords\": \"\",\n                \"creator\": \"Microsoft® Word for Microsoft 365\",\n                \"producer\": \"Microsoft® Word for Microsoft 365\",\n                \"creationDate\": \"D:20251120230707+02'00'\",\n                \"modDate\": \"D:20251120230707+02'00'\",\n                \"trapped\": \"\"\n            },\n            \"type\": \"Document\"\n        },\n        {\n            \"page_content\": \"- \\nData Manipulation & Visualization: NumPy, Pandas, Matplotlib, Seaborn \\n- \\nML/DL Frameworks: Scikit-Learn, TensorFlow, PyTorch, Keras \\n- \\nComputer Vision & NLP: OpenCV, YOLO, YuNet, FaceNet, NLTK, Transformers \\n- \\nMLOps & AI Tools: Azure ML, Azure AI Foundry, MLflow, LangChain, Gradio \\n• \\nBack End: Django, FastAPI, PostgreSQL, RESTful APIs \\n•\",\n            \"metadata\": {\n                \"source\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"file_path\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"page\": 1,\n                \"total_pages\": 2,\n                \"format\": \"PDF 1.7\",\n                \"title\": \"\",\n                \"author\": \"20812020100169\",\n                \"subject\": \"\",\n                \"keywords\": \"\",\n                \"creator\": \"Microsoft® Word for Microsoft 365\",\n                \"producer\": \"Microsoft® Word for Microsoft 365\",\n                \"creationDate\": \"D:20251120230707+02'00'\",\n                \"modDate\": \"D:20251120230707+02'00'\",\n                \"trapped\": \"\"\n            },\n            \"type\": \"Document\"\n        },\n        {\n            \"page_content\": \"• \\nTools & Technologies: Microsoft Azure, Google Colab, Jupyter Notebook, CoppeliaSim, RViz, Proteus, Multisim, VS \\nCode, Postman, Git, GitHub \\n• \\nSoft skills: Research, Leadership, Problem Solving, Communication, Time Management, Critical Thinking, Analytical, \\nInitiative-taking. \\n• \\nLanguages: Arabic (Native), English (Fluent) \\nExtracurricular Activities \\nAI & Data Science Team Member – Link\",\n            \"metadata\": {\n                \"source\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"file_path\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"page\": 1,\n                \"total_pages\": 2,\n                \"format\": \"PDF 1.7\",\n                \"title\": \"\",\n                \"author\": \"20812020100169\",\n                \"subject\": \"\",\n                \"keywords\": \"\",\n                \"creator\": \"Microsoft® Word for Microsoft 365\",\n                \"producer\": \"Microsoft® Word for Microsoft 365\",\n                \"creationDate\": \"D:20251120230707+02'00'\",\n                \"modDate\": \"D:20251120230707+02'00'\",\n                \"trapped\": \"\"\n            },\n            \"type\": \"Document\"\n        },\n        {\n            \"page_content\": \"IEEE Zagazig SB RAS – Zagazig (Mar 2023 – Oct 2023) – Top Performance Award \\nExploratory Data Analysis, worked on Descriptive & Inferential Statistics, Visualization, Data Cleaning, Feature Engineering, \\nData Modeling, Supervised Machine Learning, Advanced Learning Algorithms, and Unsupervised Learning. \\nCertificates \\n• \\nIBM – Artificial Intelligence Engineer 1 – Link \\n•\",\n            \"metadata\": {\n                \"source\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"file_path\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"page\": 1,\n                \"total_pages\": 2,\n                \"format\": \"PDF 1.7\",\n                \"title\": \"\",\n                \"author\": \"20812020100169\",\n                \"subject\": \"\",\n                \"keywords\": \"\",\n                \"creator\": \"Microsoft® Word for Microsoft 365\",\n                \"producer\": \"Microsoft® Word for Microsoft 365\",\n                \"creationDate\": \"D:20251120230707+02'00'\",\n                \"modDate\": \"D:20251120230707+02'00'\",\n                \"trapped\": \"\"\n            },\n            \"type\": \"Document\"\n        },\n        {\n            \"page_content\": \"• \\nDeepLearning.AI – Supervised Machine Learning: Regression and Classification – Link \\n• \\nNTI – Machine Learning for Data Analysis – Link \\n• \\nDEPI – Generative AI Specialist – Link\",\n            \"metadata\": {\n                \"source\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"file_path\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/CfeH9xjQVo8J_Mohamed_Nafea.pdf\",\n                \"page\": 1,\n                \"total_pages\": 2,\n                \"format\": \"PDF 1.7\",\n                \"title\": \"\",\n                \"author\": \"20812020100169\",\n                \"subject\": \"\",\n                \"keywords\": \"\",\n                \"creator\": \"Microsoft® Word for Microsoft 365\",\n                \"producer\": \"Microsoft® Word for Microsoft 365\",\n                \"creationDate\": \"D:20251120230707+02'00'\",\n                \"modDate\": \"D:20251120230707+02'00'\",\n                \"trapped\": \"\"\n            },\n            \"type\": \"Document\"\n        }\n    ],\n    \"no_records\": 17\n}"
         }
       ]
@@ -244,6 +439,7 @@
       "id": "0686fb41-0a7a-42c8-a93b-26c03cd8dc18",
       "request": {
         "method": "POST",
+        "header": [],
         "body": {
           "mode": "raw",
           "raw": "{\r\n    \"do_reset\": 1\r\n}",
@@ -274,6 +470,7 @@
           "name": "index_search",
           "originalRequest": {
             "method": "POST",
+            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\r\n    \"do_reset\": 1\r\n}",
@@ -319,6 +516,7 @@
               "value": "application/json"
             }
           ],
+          "cookie": [],
           "body": "{\n    \"message\": \"Indexing succeeded for project with ID '1'.\",\n    \"inserted_count\": 17\n}"
         }
       ]
@@ -331,6 +529,7 @@
       },
       "request": {
         "method": "GET",
+        "header": [],
         "body": {
           "mode": "raw",
           "raw": "{\r\n    \"do_reset\": 1\r\n}"
@@ -356,6 +555,7 @@
           "name": "index_info",
           "originalRequest": {
             "method": "GET",
+            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\r\n    \"do_reset\": 1\r\n}"
@@ -396,6 +596,7 @@
               "value": "application/json"
             }
           ],
+          "cookie": [],
           "body": "{\n    \"message\": \"Collection info retrieved for project with ID '1'.\",\n    \"collection_info\": {\n        \"status\": \"green\",\n        \"optimizer_status\": \"ok\",\n        \"vectors_count\": null,\n        \"indexed_vectors_count\": 0,\n        \"points_count\": 17,\n        \"segments_count\": 1,\n        \"config\": {\n            \"params\": {\n                \"vectors\": {\n                    \"size\": 384,\n                    \"distance\": \"Cosine\",\n                    \"hnsw_config\": null,\n                    \"quantization_config\": null,\n                    \"on_disk\": null,\n                    \"datatype\": null,\n                    \"multivector_config\": null\n                },\n                \"shard_number\": null,\n                \"sharding_method\": null,\n                \"replication_factor\": null,\n                \"write_consistency_factor\": null,\n                \"read_fan_out_factor\": null,\n                \"on_disk_payload\": null,\n                \"sparse_vectors\": null\n            },\n            \"hnsw_config\": {\n                \"m\": 16,\n                \"ef_construct\": 100,\n                \"full_scan_threshold\": 10000,\n                \"max_indexing_threads\": 0,\n                \"on_disk\": null,\n                \"payload_m\": null\n            },\n            \"optimizer_config\": {\n                \"deleted_threshold\": 0.2,\n                \"vacuum_min_vector_number\": 1000,\n                \"default_segment_number\": 0,\n                \"max_segment_size\": null,\n                \"memmap_threshold\": null,\n                \"indexing_threshold\": 20000,\n                \"flush_interval_sec\": 5,\n                \"max_optimization_threads\": 1\n            },\n            \"wal_config\": {\n                \"wal_capacity_mb\": 32,\n                \"wal_segments_ahead\": 0\n            },\n            \"quantization_config\": null\n        },\n        \"payload_schema\": {}\n    }\n}"
         }
       ]
@@ -405,6 +606,7 @@
       "id": "6a1cdaa7-e1a0-43e7-836a-308e9494c95c",
       "request": {
         "method": "POST",
+        "header": [],
         "body": {
           "mode": "raw",
           "raw": "{\r\n    \"query\": \"Does he study computer vision?\",\r\n    \"top_k\": 5\r\n}",
@@ -435,6 +637,7 @@
           "name": "search_vector",
           "originalRequest": {
             "method": "POST",
+            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\r\n    \"query\": \"nlp\",\r\n    \"top_k\": 5\r\n}",
@@ -482,6 +685,7 @@
               "type": "text"
             }
           ],
+          "cookie": [],
           "body": "{\n    \"message\": \"Search completed for project with ID '1'.\",\n    \"search_results\": [\n        {\n            \"id\": 13,\n            \"version\": 0,\n            \"score\": 0.24568368291517712,\n            \"payload\": {\n                \"text\": \"- \\nData Manipulation & Visualization: NumPy, Pandas, Matplotlib, Seaborn \\n- \\nML/DL Frameworks: Scikit-Learn, TensorFlow, PyTorch, Keras \\n- \\nComputer Vision & NLP: OpenCV, YOLO, YuNet, FaceNet, NLTK, Transformers \\n- \\nMLOps & AI Tools: Azure ML, Azure AI Foundry, MLflow, LangChain, Gradio \\n• \\nBack End: Django, FastAPI, PostgreSQL, RESTful APIs \\n•\",\n                \"metadata\": {\n                    \"source\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/pZdkvNw0yAma_Mohamed_Nafea.pdf\",\n                    \"file_path\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/pZdkvNw0yAma_Mohamed_Nafea.pdf\",\n                    \"page\": 1,\n                    \"total_pages\": 2,\n                    \"format\": \"PDF 1.7\",\n                    \"title\": \"\",\n                    \"author\": \"20812020100169\",\n                    \"subject\": \"\",\n                    \"keywords\": \"\",\n                    \"creator\": \"Microsoft® Word for Microsoft 365\",\n                    \"producer\": \"Microsoft® Word for Microsoft 365\",\n                    \"creationDate\": \"D:20251128075734+02'00'\",\n                    \"modDate\": \"D:20251128075734+02'00'\",\n                    \"trapped\": \"\"\n                }\n            },\n            \"vector\": null,\n            \"shard_key\": null,\n            \"order_value\": null\n        },\n        {\n            \"id\": 16,\n            \"version\": 0,\n            \"score\": 0.2443182532191967,\n            \"payload\": {\n                \"text\": \"• \\nDeepLearning.AI – Supervised Machine Learning: Regression and Classification – Link \\n• \\nNTI – Machine Learning for Data Analysis – Link \\n• \\nDEPI – Generative AI Specialist – Link\",\n                \"metadata\": {\n                    \"source\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/pZdkvNw0yAma_Mohamed_Nafea.pdf\",\n                    \"file_path\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/pZdkvNw0yAma_Mohamed_Nafea.pdf\",\n                    \"page\": 1,\n                    \"total_pages\": 2,\n                    \"format\": \"PDF 1.7\",\n                    \"title\": \"\",\n                    \"author\": \"20812020100169\",\n                    \"subject\": \"\",\n                    \"keywords\": \"\",\n                    \"creator\": \"Microsoft® Word for Microsoft 365\",\n                    \"producer\": \"Microsoft® Word for Microsoft 365\",\n                    \"creationDate\": \"D:20251128075734+02'00'\",\n                    \"modDate\": \"D:20251128075734+02'00'\",\n                    \"trapped\": \"\"\n                }\n            },\n            \"vector\": null,\n            \"shard_key\": null,\n            \"order_value\": null\n        },\n        {\n            \"id\": 11,\n            \"version\": 0,\n            \"score\": 0.22171434733669124,\n            \"payload\": {\n                \"text\": \"reinforcement learning, and optimization techniques. \\n• \\nGenerative AI Specialist \\nDigital Egypt Pioneers Initiative (DEPI) – Zagazig (Apr 2024 – Oct 2024) \\nCovered NLP, Computer Vision, Generative models (GANs, VAEs, Diffusion Models), and RAG systems. Applied large \\nlanguage models (GPT, BERT, T5) for fine-tuning and deployment. \\n• \\nMachine Learning for Data Analysis\",\n                \"metadata\": {\n                    \"source\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/pZdkvNw0yAma_Mohamed_Nafea.pdf\",\n                    \"file_path\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/pZdkvNw0yAma_Mohamed_Nafea.pdf\",\n                    \"page\": 1,\n                    \"total_pages\": 2,\n                    \"format\": \"PDF 1.7\",\n                    \"title\": \"\",\n                    \"author\": \"20812020100169\",\n                    \"subject\": \"\",\n                    \"keywords\": \"\",\n                    \"creator\": \"Microsoft® Word for Microsoft 365\",\n                    \"producer\": \"Microsoft® Word for Microsoft 365\",\n                    \"creationDate\": \"D:20251128075734+02'00'\",\n                    \"modDate\": \"D:20251128075734+02'00'\",\n                    \"trapped\": \"\"\n                }\n            },\n            \"vector\": null,\n            \"shard_key\": null,\n            \"order_value\": null\n        },\n        {\n            \"id\": 3,\n            \"version\": 0,\n            \"score\": 0.16507039483397953,\n            \"payload\": {\n                \"text\": \"- \\nAchieved 87.2% accuracy score on LFW dataset using deep learning and computer vision techniques. \\nProjects \\n• \\nAINO – A No Code Platform for AI Development – Link | Demo \\nZagazig University – Graduation Project (Nov 2024 – Aug 2025) \\n• \\nRanked among the Top 10 Graduation projects out of 200+ at the Egypt IOT & AI Challenge \\n• \\nExcellence Degree (196/200) \\nBackend Developer \\n-\",\n                \"metadata\": {\n                    \"source\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/pZdkvNw0yAma_Mohamed_Nafea.pdf\",\n                    \"file_path\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/pZdkvNw0yAma_Mohamed_Nafea.pdf\",\n                    \"page\": 0,\n                    \"total_pages\": 2,\n                    \"format\": \"PDF 1.7\",\n                    \"title\": \"\",\n                    \"author\": \"20812020100169\",\n                    \"subject\": \"\",\n                    \"keywords\": \"\",\n                    \"creator\": \"Microsoft® Word for Microsoft 365\",\n                    \"producer\": \"Microsoft® Word for Microsoft 365\",\n                    \"creationDate\": \"D:20251128075734+02'00'\",\n                    \"modDate\": \"D:20251128075734+02'00'\",\n                    \"trapped\": \"\"\n                }\n            },\n            \"vector\": null,\n            \"shard_key\": null,\n            \"order_value\": null\n        },\n        {\n            \"id\": 1,\n            \"version\": 0,\n            \"score\": 0.15214920636902127,\n            \"payload\": {\n                \"text\": \"delivering hands-on projects in Face Recognition, Agentic RAG, and Robotics. Proficient in Python, TensorFlow, \\nPyTorch, OpenCV, LangChain, and other relevant technologies. Strong problem-solving, communication, and time \\nmanagement skills. \\nEducation \\nB.Eng. Computer & Systems Engineering \\nZagazig University – Zagazig (Oct 2020 – Jul 2025) – GPA: 3.0 \\nWork Experience \\nAI Engineer (Freelance)\",\n                \"metadata\": {\n                    \"source\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/pZdkvNw0yAma_Mohamed_Nafea.pdf\",\n                    \"file_path\": \"/mnt/d/MO/Ai_Projects/mini-rag/src/assets/files/1/pZdkvNw0yAma_Mohamed_Nafea.pdf\",\n                    \"page\": 0,\n                    \"total_pages\": 2,\n                    \"format\": \"PDF 1.7\",\n                    \"title\": \"\",\n                    \"author\": \"20812020100169\",\n                    \"subject\": \"\",\n                    \"keywords\": \"\",\n                    \"creator\": \"Microsoft® Word for Microsoft 365\",\n                    \"producer\": \"Microsoft® Word for Microsoft 365\",\n                    \"creationDate\": \"D:20251128075734+02'00'\",\n                    \"modDate\": \"D:20251128075734+02'00'\",\n                    \"trapped\": \"\"\n                }\n            },\n            \"vector\": null,\n            \"shard_key\": null,\n            \"order_value\": null\n        }\n    ]\n}"
         }
       ]
@@ -491,6 +695,7 @@
       "id": "c3d1fb06-4628-403a-ac8b-31d9f64a95b5",
       "request": {
         "method": "POST",
+        "header": [],
         "body": {
           "mode": "raw",
           "raw": "{\r\n    \"query\": \"Does he study computer vision?\",\r\n    \"top_k\": 5,\r\n    \"max_tokens\": 512,\r\n    \"temperature\": 0.1\r\n}",
@@ -521,6 +726,7 @@
           "name": "answer_en",
           "originalRequest": {
             "method": "POST",
+            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\r\n    \"query\": \"does he study nlp\",\r\n    \"top_k\": 5\r\n}",
@@ -566,6 +772,7 @@
               "value": "application/json"
             }
           ],
+          "cookie": [],
           "body": "{\n    \"message\": \"Answer generated successfully for project with ID '1'.\",\n    \"answer\": \"<think>\\nOkay, let's see. The user provided three documents and wants me to generate a response based on them. The query isn't explicitly stated, but looking at the documents, they seem to be part of a resume or profile highlighting skills and experience in machine learning, data science, and AI.\\n\\nFirst, I need to figure out what the user's query might be. Since the documents mention skills in Python, ML frameworks, projects with CNNs, and roles like Generative AI Specialist and ML Engineer, the user might be looking to present their expertise in a concise way. Maybe they want a summary of their technical skills and experience for a job application or LinkedIn profile.\\n\\nDocument 1 lists technical skills in software engineering, data visualization, and ML/DL frameworks. Document 2 details recent projects and roles from April to October 2024, focusing on generative AI and NLP. Document 3 adds more on data modeling and certifications from IBM and DEPI.\\n\\nI should structure the response to highlight key areas: technical expertise, recent projects, and certifications. Need to make sure it's concise, uses bullet points for clarity, and mentions the relevant tools and frameworks. Also, note the certifications to add credibility. Avoid any irrelevant info and ensure the language\",\n    \"full_prompt\": \"## Document No: 1\\n### Content: Focused on exploratory data analysis, preprocessing, supervised/unsupervised learning, CNNs, and transfer learning for image-\\nbased projects. \\n        \\nSkills \\n• \\nSoftware Engineering: OS, SQL, Algorithms, Data Structures, Networks, OOP, Python, Java, C, MATLAB, Arduino \\n• \\nData & Visualization: NumPy, Pandas, Matplotlib, Seaborn \\n• \\nML/DL Frameworks: Scikit-Learn, TensorFlow, PyTorch, Keras \\n•\\n## Document No: 2\\n### Content: • \\nGenerative AI Specialist | DEPI | Hybrid  \\n \\n \\n \\n \\nApr 2024 – Oct 2024 \\nCovered NLP, Computer Vision, Generative models (GANs, VAEs, Diffusion Models), and RAG systems. Applied large \\nlanguage models (GPT, BERT, T5) for fine-tuning and deployment. \\n• \\nML Engineer | NTI | On-Site \\n \\n \\n \\n \\n \\n \\nJul 2024 – Sep 2024\\n## Document No: 3\\n### Content: Data Modeling, Supervised Machine Learning, Advanced Learning Algorithms, and Unsupervised Learning. \\nCertificates \\n• \\nArtificial Intelligence Engineer Path | IBM | Link \\n• \\nGenerative AI Specialist | DEPI | Link \\n• \\nSupervised Machine Learning | DeepLearning.AI | Link \\n• \\nMachine Learning for Data Analysis | NTI | Link\\n## Document No: 4\\n### Content: • \\nSoft skills: Research, Leadership, Problem Solving, Communication, Time Management, Critical Thinking \\n• \\nLanguages: Arabic (Native), English (Fluent) \\nExtracurricular Activities \\nData Scientist | IEEE Zagazig SB | Link  \\n \\n \\n \\n \\n \\nMar 2023 – Oct 2023 \\nExploratory Data Analysis, worked on Descriptive & Inferential Statistics, Visualization, Data Cleaning, Feature Engineering,\\n## Document No: 5\\n### Content: - \\nAchieved 87.2% accuracy score on LFW dataset using deep learning and computer vision techniques. \\nProjects \\n• \\nMini-RAG | Production-Grade RAG System | Link | Demo \\n \\n \\nNov 2025 – Dec 2025 \\n- \\nBuilt a RAG system integrating FastAPI, LangChain, and multiple Vector DBs (Qdrant, PGVector) to process and \\nretrieve context for LLMs (OpenAI, Groq, Cohere). \\n-\\n\\nBased only on the above documents, please generate an answer for the user.\\n## Question:\\ndoes he study nlp\\n\\n## Answer:\",\n    \"chat_history\": [\n        {\n            \"role\": \"system\",\n            \"content\": \"You are an assistant to generate a response for the user.\\nYou will be provided by a set of docuemnts associated with the user's query.\\nYou have to generate a response based on the documents provided.\\nIgnore the documents that are not relevant to the user's query.\\nYou can applogize to the user if you are not able to generate a response.\\nYou have to generate response in the same language as the user's query.\\nBe polite and respectful to the user.\\nBe precise and concise in your response. Avoid unnecessary information.\"\n        }\n    ]\n}"
         },
         {
@@ -573,6 +780,7 @@
           "name": "answer_ar",
           "originalRequest": {
             "method": "POST",
+            "header": [],
             "body": {
               "mode": "raw",
               "raw": "",
@@ -618,8 +826,95 @@
               "value": "application/json"
             }
           ],
+          "cookie": [],
           "responseTime": "2025-12-01T08:59:31.916Z",
           "body": "{\n    \"message\": \"Answer generated successfully for project with ID '1'.\",\n    \"answer\": \"نعم، يُظهر السيرة الذاتية أن صاحبها يدرس ويعمل في مجالات الذكاء الاصطناعي التوليدي ووكلاء الذكاء الاصطناعي.  \\n- **الذكاء الاصطناعي التوليدي:** خبرة في Generative AI، شهادات في Generative AI Specialist، تدريب على GANs و diffusion models.  \\n- **وكلاء الذكاء الاصطناعي:** تصميم بنية برمجية لتفاعل عقد AI (AI node interaction) في مشروع Backend Developer، ما يشير إلى عمل مع وكلاء أو وحدات ذكاء اصطناعي.\",\n    \"full_prompt\": \"## المستند رقم: 1\\n### المحتوى: • \\nSoft skills: Research, Leadership, Problem Solving, Communication, Time Management, Critical Thinking \\n• \\nLanguages: Arabic (Native), English (Fluent) \\nExtracurricular Activities \\nData Scientist | IEEE Zagazig SB | Link  \\n \\n \\n \\n \\n \\nMar 2023 – Oct 2023 \\nExploratory Data Analysis, worked on Descriptive & Inferential Statistics, Visualization, Data Cleaning, Feature Engineering,\\n## المستند رقم: 2\\n### المحتوى: Mohamed K. Nafea | AI Engineer \\n+20 1129330746 | Zagazig, Egypt | Email: monafe301@gmail.com | GitHub: github.com/MoNafea01 | \\nLinkedIn: linkedin.com/in/monafea01 | Kaggle: kaggle.com/mohamednafea01 | Military Status: Exempted \\nSummary \\nResult-oriented AI Engineer specializing in Generative AI and complex Computer Vision systems. Proven expertise in\\n## المستند رقم: 3\\n### المحتوى: - \\nRanked among the Top10 Graduation projects out of 200+ at the Egypt IOT & AI Challenge \\nBackend Developer \\n- \\nDesigned the Overall Software Architecture (Service & Repository Layers) for modular AI node interaction.  \\n- \\nImplemented Backend using Django RESTful framework, enabling scalable and secure API-driven workflows. \\n-\\n## المستند رقم: 4\\n### المحتوى: Training & Internships \\n• \\nArtificial Intelligence Engineer Path | IBM | Remote \\n \\n \\n \\nMar 2025 – Jun 2025 \\nGained hands-on experience with machine learning algorithms, deep learning architectures, and advanced frameworks \\nincluding TensorFlow, Keras, and PyTorch. Covered regression & classification, transformers, GANs, diffusion models, \\nreinforcement learning, and optimization techniques. \\n•\\n## المستند رقم: 5\\n### المحتوى: Data Modeling, Supervised Machine Learning, Advanced Learning Algorithms, and Unsupervised Learning. \\nCertificates \\n• \\nArtificial Intelligence Engineer Path | IBM | Link \\n• \\nGenerative AI Specialist | DEPI | Link \\n• \\nSupervised Machine Learning | DeepLearning.AI | Link \\n• \\nMachine Learning for Data Analysis | NTI | Link\\n\\nبناءً فقط على المستندات المذكورة أعلاه، يرجى توليد إجابة للمستخدم.\\n## السؤال:\\nهل صاحب السيرة الذاتية يذاكر حاجات متعلقة بالذكاء الاصطناعى التوليدي و وكلاء الذكاء الاصطناعى\\n\\n## الإجابة:\",\n    \"chat_history\": [\n        {\n            \"role\": \"system\",\n            \"content\": \"أنت مساعد لتوليد رد للمستخدم.\\nستحصل على مجموعة من المستندات المرتبطة باستفسار المستخدم.\\nعليك توليد رد بناءً على المستندات المقدمة.\\nتجاهل المستندات التي لا تتعلق باستفسار المستخدم.\\nيمكنك الاعتذار للمستخدم إذا لم تتمكن من توليد رد.\\nعليك توليد الرد بنفس لغة استفسار المستخدم.\\nكن مؤدباً ومحترماً في التعامل مع المستخدم.\\nكن دقيقًا ومختصرًا في ردك. تجنب المعلومات غير الضرورية.\"\n        }\n    ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "chatbot",
+      "id": "099690d9-7209-4cd5-a874-bad5bd3ffd31",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"query\": \"Who are you\",\r\n    \"top_k\": 5,\r\n    \"max_tokens\": 512,\r\n    \"temperature\": 0.1\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{api}}/api/v1/nlp/index/answer",
+          "host": [
+            "{{api}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "nlp",
+            "index",
+            "answer"
+          ]
+        }
+      },
+      "response": [
+        {
+          "id": "3db064a6-2e8c-4d21-aa1c-745af6023882",
+          "name": "chatbot",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"query\": \"Who are you\",\r\n    \"top_k\": 5,\r\n    \"max_tokens\": 512,\r\n    \"temperature\": 0.1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{api}}/api/v1/nlp/index/answer",
+              "host": [
+                "{{api}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "nlp",
+                "index",
+                "answer"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "date",
+              "value": "Sat, 27 Dec 2025 12:41:14 GMT"
+            },
+            {
+              "key": "server",
+              "value": "uvicorn"
+            },
+            {
+              "key": "content-length",
+              "value": "449"
+            },
+            {
+              "key": "content-type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "responseTime": "2025-12-27T12:42:09.403Z",
+          "body": "{\n    \"message\": \"Chatbot response generated successfully\",\n    \"mode\": \"chatbot\",\n    \"answer\": \"I’m ChatGPT, an AI language model created by OpenAI. I’m designed to understand and generate text, answer questions, help with writing, and assist with a wide range of topics. Feel free to ask me anything!\",\n    \"full_prompt\": \"Who are you\",\n    \"chat_history\": [\n        {\n            \"role\": \"system\",\n            \"content\": \"You are a helpful AI assistant. Answer the user's questions clearly and concisely.\"\n        }\n    ]\n}"
         }
       ]
     }
