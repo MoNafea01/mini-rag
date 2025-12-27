@@ -49,6 +49,7 @@ async def index_project(request: Request,
     pg_size = 50
     inserted_count = 0
     idx  = 0
+    is_first_batch = True
     
     while True:
         paged_chunks = await chunk_model.get_project_chunks(project_id=project.project_id, page=pg_num, page_size=pg_size)
@@ -56,12 +57,17 @@ async def index_project(request: Request,
         if not paged_chunks or len(paged_chunks) == 0:
             break
         
-        pg_num += 1
-        idx += len(paged_chunks)
-        
         chunks_ids = list(range(idx, idx + len(paged_chunks)))
         
-        is_inserted = nlp_controller.index_into_vector_db(project=project, chunks=paged_chunks, chunks_ids=chunks_ids, do_reset=push_request.do_reset)
+        # Only reset on first batch
+        do_reset_batch = push_request.do_reset if is_first_batch else False
+        
+        is_inserted = nlp_controller.index_into_vector_db(
+            project=project, 
+            chunks=paged_chunks, 
+            chunks_ids=chunks_ids, 
+            do_reset=do_reset_batch
+        )
         
         if not is_inserted:
             return JSONResponse(
@@ -69,6 +75,9 @@ async def index_project(request: Request,
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
         inserted_count += len(paged_chunks)
+        idx += len(paged_chunks)
+        pg_num += 1
+        is_first_batch = False
     
     return JSONResponse(
         content=message_handler(ResponseMessage.VECTOR_DB_INDEXING_SUCCESS.value.format(project_id=project_id), inserted_count=inserted_count),
