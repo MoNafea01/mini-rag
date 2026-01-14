@@ -27,16 +27,19 @@ async def initialize_database_connection(app: FastAPI, settings):
     pg_conn = f"postgresql+asyncpg://{settings.POSTGRES_USERNAME}:{settings.POSTGRES_PASSWORD}@{settings.POSTGRES_HOST}:{settings.POSTGRES_PORT}/{settings.POSTGRES_MAIN_DB}"
     app.db_engine = create_async_engine(pg_conn)
     
+    # Create PostgreSQL session factory (needed for PgVector)
+    app.pg_session_factory = async_sessionmaker(
+        app.db_engine, 
+        class_=AsyncSession,
+        expire_on_commit=False
+    )
+    
     # Set active db_client based on DB_TYPE
     if settings.DB_TYPE == DatabaseType.MONGODB.value:
         app.db_client = app.mongo_conn[settings.MONGODB_NAME]
         logger.info("✅ Using MongoDB as active database")
     else:
-        app.db_client = async_sessionmaker(
-            app.db_engine, 
-            class_=AsyncSession,
-            expire_on_commit=False
-        )
+        app.db_client = app.pg_session_factory
         logger.info("✅ Using PostgreSQL as active database")
 
 
@@ -67,7 +70,11 @@ async def initialize_vector_db(app: FastAPI, settings):
         except:
             pass
     
-    vectordb_factory = VectorDBFactory(settings, db_client=app.db_client)
+    # PgVector always needs PostgreSQL session factory, regardless of main DB_TYPE
+    # Qdrant doesn't use db_client, so it doesn't matter what we pass
+    db_client_for_vector = app.pg_session_factory
+    
+    vectordb_factory = VectorDBFactory(settings, db_client=db_client_for_vector)
     app.vectordb_client = vectordb_factory.create(settings.VECTOR_DB_BACKEND)
     await app.vectordb_client.connect()
     logger.info(f"✅ VectorDB connected: {settings.VECTOR_DB_BACKEND}")
@@ -92,7 +99,7 @@ async def lifespan(app: FastAPI):
     # Shutdown
     await app.db_engine.dispose()
     logger.info("🛑 Database connection closed")
-    app.vectordb_client.disconnect()
+    await app.vectordb_client.disconnect()
     logger.info("🛑 VectorDB connection closed")
 
 app = FastAPI(lifespan=lifespan)
