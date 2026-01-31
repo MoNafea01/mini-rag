@@ -1,13 +1,14 @@
+import logging
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from routes import base, data, nlp, settings
 from helpers.config import get_settings
 from stores import LLMFactory, VectorDBFactory
 from stores.llm.templates.template_parser import TemplateParser
-import logging
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from motor.motor_asyncio import AsyncIOMotorClient
 from models.enums import DatabaseType
+from utils.metrics import setup_metrics
 
 logger = logging.getLogger('uvicorn.error')
 
@@ -103,6 +104,7 @@ async def lifespan(app: FastAPI):
     logger.info("🛑 VectorDB connection closed")
 
 app = FastAPI(lifespan=lifespan)
+setup_metrics(app)
 
 app.include_router(base.base_router)
 app.include_router(data.data_router)

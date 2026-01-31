@@ -57,7 +57,7 @@ class Qdrant(VectorDBInterface):
         
         if not await self.is_collection_existed(collection_name):
             self.logger.info(f"Creating Qdrant Collection: {collection_name}.")
-            _ = await self.client.create_collection(
+            _ = self.client.create_collection(
                 collection_name=collection_name,
                 vectors_config=models.VectorParams(size=embedding_size,
                                                    distance=self.distance_metric))
@@ -77,7 +77,7 @@ class Qdrant(VectorDBInterface):
             return False
         
         try:
-            await self.client.upload_records(
+            self.client.upload_records(
                 collection_name=collection_name,
                 records=[
                     models.Record(
@@ -149,7 +149,7 @@ class Qdrant(VectorDBInterface):
             self.logger.error(f"Cannot search Collection: {collection_name} does not exist.")
             return []
         
-        results = await self.client.search(
+        results = self.client.search(
             collection_name=collection_name,
             query_vector=query_vector,
             limit=top_k

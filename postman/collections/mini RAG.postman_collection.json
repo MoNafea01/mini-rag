@@ -15,14 +15,15 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{api}}/api/v1/settings",
+              "raw": "{{api}}/api/v1/settings/",
               "host": [
                 "{{api}}"
               ],
               "path": [
                 "api",
                 "v1",
-                "settings"
+                "settings",
+                ""
               ]
             }
           },
@@ -68,7 +69,7 @@
               ],
               "cookie": [],
               "responseTime": "2025-12-27T11:48:29.471Z",
-              "body": "{\n    \"settings\": {\n        \"APP_NAME\": \"mini-RAG\",\n        \"APP_VERSION\": \"0.1.0\",\n        \"OPENAPI_API_KEY\": \"your..._key\",\n        \"FILE_MAX_SIZE_MB\": \"20\",\n        \"FILE_ALLOWED_TYPES\": \"[\\\"text/plain\\\", \\\"application/pdf\\\"]\",\n        \"FILE_STORAGE_PATH\": \"assets/files\",\n        \"FILE_DEFAULT_CHUNK_SIZE\": \"524288\",\n        \"DB_TYPE\": \"\\\"postgres\\\"\",\n        \"DOMAIN_NAME\": \"localhost\",\n        \"USERNAME\": \"admin\",\n        \"PASSWORD\": \"***\",\n        \"MONGO_URI\": \"mong...7007\",\n        \"MONGODB_NAME\": \"mini-rag\",\n        \"POSTGRES_HOST\": \"localhost\",\n        \"POSTGRES_PORT\": \"5400\",\n        \"POSTGRES_MAIN_DB\": \"minirag\",\n        \"POSTGRES_USERNAME\": \"postgres\",\n        \"POSTGRES_PASSWORD\": \"***\",\n        \"GENERATION_BACKEND\": \"GROQ\",\n        \"EMBEDDING_BACKEND\": \"COHERE\",\n        \"OPENAI_API_KEY\": \"sk-p...2CsA\",\n        \"COHERE_API_KEY\": \"ex38...ZlUo\",\n        \"GROQ_API_KEY\": \"gsk_...zut2\",\n        \"BASE_API_URL\": \"https://c002eef68d22.ngrok-free.app\",\n        \"GENERATION_MODEL_ID\": \"qwen/qwen3-32b\",\n        \"EMBEDDING_MODEL_ID\": \"embed-multilingual-light-v3.0\",\n        \"EMBEDDING_MODEL_SIZE\": \"384\",\n        \"DEFAULT_GENERATION_TEMPERATURE\": \"0.1\",\n        \"DEFAULT_GENERATION_OUTPUT_MAX_TOKENS\": \"***\",\n        \"DEFAULT_GENERATION_INPUT_MAX_CHARACTERS\": \"4096\",\n        \"VECTOR_DB_BACKEND\": \"QDRANT\",\n        \"VECTOR_DB_PATH\": \"assets/database\",\n        \"VECTOR_DB_PATH_NAME\": \"qdrant_db\",\n        \"VECTOR_DB_DISTANCE_METRIC\": \"cosine\",\n        \"PRIMARY_LANGUAGE\": \"ar\",\n        \"DEFAULT_LANGUAGE\": \"en\"\n    }\n}"
+              "body": "{\n    \"settings\": {\n        \"APP_NAME\": \"mini-RAG\",\n        \"APP_VERSION\": \"0.1.0\",\n        \"OPENAPI_API_KEY\": \"your..._key\",\n        \"FILE_MAX_SIZE_MB\": \"20\",\n        \"FILE_ALLOWED_TYPES\": \"[\\\"text/plain\\\", \\\"application/pdf\\\"]\",\n        \"FILE_STORAGE_PATH\": \"assets/files\",\n        \"FILE_DEFAULT_CHUNK_SIZE\": \"524288\",\n        \"DB_TYPE\": \"\\\"postgres\\\"\",\n        \"MONGO_HOST\": \"localhost\",\n        \"MONGO_USERNAME\": \"admin\",\n        \"MONGO_PASSWORD\": \"***\",\n        \"MONGO_URI\": \"mong...7007\",\n        \"MONGODB_NAME\": \"mini-rag\",\n        \"POSTGRES_HOST\": \"localhost\",\n        \"POSTGRES_PORT\": \"5432\",\n        \"POSTGRES_MAIN_DB\": \"minirag\",\n        \"POSTGRES_USERNAME\": \"postgres\",\n        \"POSTGRES_PASSWORD\": \"***\",\n        \"GENERATION_BACKEND\": \"GROQ\",\n        \"EMBEDDING_BACKEND\": \"COHERE\",\n        \"OPENAI_API_KEY\": \"sk-p...2CsA\",\n        \"COHERE_API_KEY\": \"ex38...ZlUo\",\n        \"GROQ_API_KEY\": \"gsk_...zut2\",\n        \"BASE_API_URL\": \"https://c002eef68d22.ngrok-free.app\",\n        \"GENERATION_MODEL_ID\": \"qwen/qwen3-32b\",\n        \"EMBEDDING_MODEL_ID\": \"embed-multilingual-light-v3.0\",\n        \"EMBEDDING_MODEL_SIZE\": \"384\",\n        \"DEFAULT_GENERATION_TEMPERATURE\": \"0.1\",\n        \"DEFAULT_GENERATION_OUTPUT_MAX_TOKENS\": \"***\",\n        \"DEFAULT_GENERATION_INPUT_MAX_CHARACTERS\": \"4096\",\n        \"VECTOR_DB_BACKEND\": \"QDRANT\",\n        \"VECTOR_DB_PATH\": \"assets/database\",\n        \"VECTOR_DB_PATH_NAME\": \"qdrant_db\",\n        \"VECTOR_DB_DISTANCE_METRIC\": \"cosine\",\n        \"PRIMARY_LANGUAGE\": \"ar\",\n        \"DEFAULT_LANGUAGE\": \"en\"\n    }\n}"
             }
           ]
         },

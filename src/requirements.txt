@@ -7,7 +7,7 @@ aiofiles==23.2.1
 langchain==0.1.20
 pyMuPDF==1.24.3
 motor==3.6.0
-openai==1.66.3
+openai==1.75.0
 cohere==4.45.0
 groq==0.33.0
 qdrant-client==1.10.0
@@ -17,3 +17,6 @@ alembic==1.14.0
 psycopg2==2.9.10
 pgvector==0.4.0
 nltk==3.9.1
+prometheus-client==0.19.0
+starlette-exporter==0.17.1
+fastapi-health==0.4.0

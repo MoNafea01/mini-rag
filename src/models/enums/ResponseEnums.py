@@ -19,4 +19,4 @@ class ResponseMessage(Enum):
     VECTOR_DB_SEARCH_FAILED = "Vector database search failed for project with ID '{project_id}'."
     ANSWER_GENERATION_SUCCESS = "Answer generated successfully for project with ID '{project_id}'."
     ANSWER_GENERATION_FAILED = "Answer generation failed for project with ID '{project_id}'."
-    
+    VECTOR_DB_COLLECTION_INFO_RETRIEVAL_FAILED = "Failed to retrieve collection info for project with ID '{project_id}'."

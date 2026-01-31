@@ -15,10 +15,10 @@ class DistanceMetricEnums(Enum):
     MANHATTAN = "manhattan"
 
 class QdrantDistanceMetricEnums(Enum):
-    COSINE = "COSINE"
-    DOT = "DOT"
-    EUCLID = "EUCLID"
-    MANHATTAN = "MANHATTAN"
+    COSINE = "Cosine"
+    DOT = "Dot"
+    EUCLID = "Euclid"
+    MANHATTAN = "Manhattan"
 
 class PgVectorDistanceMetricEnums(Enum):
     COSINE = "vector_cosine_ops"

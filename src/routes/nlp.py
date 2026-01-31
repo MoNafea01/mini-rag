@@ -150,9 +150,15 @@ async def get_index_info(request: Request, project_id: Union[int, str], app_sett
         embedding_client=request.app.embedding_client,
         template_parser=request.app.template_parser
     )
-    
-    collection_info = await nlp_controller.get_vector_collection_info(project=project)
-    
+    try:
+        collection_info = await nlp_controller.get_vector_collection_info(project=project)
+    except Exception as e:
+        logger.error(f"Failed to retrieve collection info for project {project_id}: {str(e)}")
+        return JSONResponse(
+            content=message_handler(ResponseMessage.VECTOR_DB_COLLECTION_INFO_RETRIEVAL_FAILED.value.format(project_id=project_id)),
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+        
     return JSONResponse(
         content=message_handler(ResponseMessage.VECTOR_DB_COLLECTION_INFO_RETRIEVED.value.format(project_id=project_id), collection_info=collection_info),
         status_code=status.HTTP_200_OK
