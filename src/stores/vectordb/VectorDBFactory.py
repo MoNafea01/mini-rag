@@ -18,9 +18,11 @@ class VectorDBFactory:
             return None
         
         db_path = self.base_controller.get_database_path(db_name=self.settings.VECTOR_DB_PATH_NAME)
+        db_url = self.settings.QDRANT_URL if self.settings.VECTOR_DB_BACKEND == "QDRANT" else None
         
         return Provider(
             db_path=db_path,
+            db_url=db_url,
             db_client=self.db_client,
             distance_metric=self.settings.VECTOR_DB_DISTANCE_METRIC,
             index_threshold=self.settings.VECTOR_DB_PGVEC_INDEX_THRESHOLD,

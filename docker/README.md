@@ -22,14 +22,14 @@ Create your environment files from the examples:
 ```bash
 # Create all required .env files from examples
 cd docker/env
-cp ./minirag/.env.example.app ./minirag/.env.app
-cp ./grafana/.env.example.grafana ./grafana/.env.grafana
+cp ./minirag/.env.example ./minirag/.env
+cp ./grafana/.env.example ./grafana/.env
 
-cp ./postgres/.env.example.postgres ./postgres/.env.postgres
-cp ./mongodb/.env.example.mongodb ./mongodb/.env.mongodb
+cp ./postgres/.env.example ./postgres/.env
+cp ./mongodb/.env.example ./mongodb/.env
 
-cp ./pg_exporter/.env.example.postgres-exporter ./pg_exporter/.env.postgres-exporter
-cp ./mongodb_exporter/.env.example.mongo-exporter ./mongodb_exporter/.env.mongo-exporter
+cp ./pg_exporter/.env.example ./pg_exporter/.env
+cp ./mongodb_exporter/.env.example ./mongodb_exporter/.env
 
 # Setup the Alembic configuration for the FastAPI application
 cd ..

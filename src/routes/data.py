@@ -4,7 +4,7 @@ import logging
 from typing import List, Union
 from fastapi import APIRouter, UploadFile, status, Request, File, Depends
 from fastapi.responses import JSONResponse
-from controllers import DataController, ProjectController, ProcessController, NLPController
+from controllers import DataController, ProjectController
 from helpers.config import get_settings, Settings
 from helpers.utils import generate_unique_filepath, message_handler
 from models.enums import ResponseMessage, AssetTypeEnum
@@ -12,6 +12,8 @@ from models import ModelFactory, DatabaseType
 
 from models.db_schemas import SchemaFactory
 from .schemas import ProcessRequest
+
+from tasks.file_processing import process_data as process_data_task
 
 logger = logging.getLogger('uvicorn.error')
 
@@ -134,124 +136,15 @@ async def process_data(request: Request,
     overlap_size = process_request.overlap_size
     do_reset = process_request.do_reset
     
-    project_model = await ModelFactory.create_project_model(
-        db_type=app_settings.DB_TYPE,
-        db_client=request.app.db_client
+    task = process_data_task.delay(
+        project_id=project_id,
+        asset_name=asset_name, 
+        chunk_size=chunk_size, 
+        overlap_size=overlap_size, 
+        do_reset=do_reset
     )
     
-    asset_model = await ModelFactory.create_asset_model(
-        db_type=app_settings.DB_TYPE,
-        db_client=request.app.db_client
+    return JSONResponse(
+        content={ "message": "Data processing task has been initiated.", "task_id": task.id, "task_status": task.status }, 
+        status_code=status.HTTP_202_ACCEPTED 
     )
-    
-    project = await project_model.get_project_or_create_one(project_id=project_id)
-    process_controller = ProcessController(project_id)
-    
-    nlp_controller = NLPController(
-        vectordb_client=request.app.vectordb_client,
-        generation_client=request.app.generation_client,
-        embedding_client=request.app.embedding_client,
-        template_parser=request.app.template_parser
-    )
-    
-    if asset_name:
-        asset_record = await asset_model.get_asset_by_name(asset_name=asset_name, asset_project_id=project.project_id)
-        if asset_record is None:
-            return JSONResponse(
-                content=message_handler(
-                    ResponseMessage.FILE_NOT_FOUND_FOR_PROCESSING.value.format(
-                        asset_name=asset_name,
-                        project_id=project.project_id
-                    )
-                ),
-                status_code=status.HTTP_404_NOT_FOUND
-            )
-            
-        project_files = [asset_record]
-    
-    else:
-        project_files = await asset_model.get_all_assets(
-            asset_project_id=project.project_id,
-            asset_type=AssetTypeEnum.FILE.value
-        )
-    
-    if len(project_files) == 0:
-        return JSONResponse(
-            content=message_handler(
-                ResponseMessage.NO_FILES_FOUND_FOR_PROCESSING.value.format(project_id=project.project_id)
-            ),
-            status_code=status.HTTP_404_NOT_FOUND
-        )
-    project_files_names = list(map(lambda x: x.asset_name, project_files))
-
-    chunk_model = await ModelFactory.create_chunk_model(
-            db_type=app_settings.DB_TYPE,
-            db_client=request.app.db_client
-        )
-        
-    if do_reset == 1:
-        collection_name = nlp_controller.generate_collection_name(project.project_id)
-        await request.app.vectordb_client.delete_collection(collection_name=collection_name)
-        
-        await chunk_model.delete_chunks_by_id(project_id=project.project_id)
-    
-    no_files = 0
-    no_records = 0
-    files_names = []
-    all_file_chunks = []
-    warnings = {'content': []}
-    for idx, asset in enumerate(project_files):
-        asset_name = asset.asset_name
-        file_content = process_controller.get_file_content(asset_name)
-        
-        if file_content is None:
-            warning = f"File content is None or file not found: {asset_name}, skipping..."
-            logger.warning(warning)
-            
-            warnings['content'].append({'id': idx+1, 
-                             'name': asset_name, 
-                             'message': warning})
-            continue
-        
-        file_chunks = process_controller.process_file_content(
-            file_content=file_content,
-            chunk_size=chunk_size,
-            overlap_size=overlap_size
-        )
-        
-        if file_chunks is None or len(file_chunks) == 0:
-            return JSONResponse(
-                content=message_handler(
-                    ResponseMessage.FILE_PROCESSING_ERROR.value.format(asset_name=asset_name)
-                ),
-                status_code=status.HTTP_400_BAD_REQUEST
-            )
-        data_chunk_schema = SchemaFactory.get_chunk_schema(app_settings.DB_TYPE)
-        file_chunks_records = [data_chunk_schema(
-            chunk_text=chunk.page_content,
-            chunk_metadata=chunk.metadata,
-            chunk_order=i+1,
-            chunk_project_id=project.project_id,
-            chunk_asset_id=asset.asset_id,
-            ) for i, chunk in enumerate(file_chunks)
-        ]
-        
-        no_records += await chunk_model.insert_many_chunks(file_chunks_records)
-        
-        no_files += 1
-        files_names.append(asset_name)
-        all_file_chunks.append(file_chunks)
-    
-    if len(warnings['content']) > 0:
-        warnings['count'] = len(warnings['content'])
-    
-    message = message_handler(
-        ResponseMessage.FILE_PROCESSING_SUCCESS.value,
-        names=files_names,
-        chunks=all_file_chunks,
-        records_count=no_records,
-        processed_files=no_files,
-        warnings=warnings
-    )
-    
-    return message

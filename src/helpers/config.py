@@ -46,6 +46,7 @@ class Settings(BaseSettings):
     
     VECTOR_DB_BACKEND: str
     VECTOR_DB_PATH: str
+    QDRANT_URL: str = None
     VECTOR_DB_PATH_NAME: str
     VECTOR_DB_DISTANCE_METRIC: str = None
     VECTOR_DB_PGVEC_INDEX_THRESHOLD: int=100
@@ -53,6 +54,15 @@ class Settings(BaseSettings):
     LANGUAGE_OPTIONS: List[str] = None
     PRIMARY_LANGUAGE: str = "en"
     DEFAULT_LANGUAGE: str = "en"
+    
+    CELERY_BROKER_URL: str = None
+    CELERY_RESULT_BACKEND: str = None
+    CELERY_TASK_SERIALIZER: str = "json"
+    CELERY_RESULT_SERIALIZER: str = "json"
+    CELERY_ACCEPT_CONTENT: List[str] = ["json"]
+    CELERY_TASK_TIME_LIMIT: int = 600
+    CELERY_ACKS_LATE: bool = True
+    CELERY_WORKER_CONCURRENCY: int = 2
     
     class Config:
         env_file = ".env" 

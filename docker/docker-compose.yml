@@ -17,7 +17,7 @@ services:
       mongodb:
         condition: service_healthy
     env_file:
-      - ./env/minirag/.env.app
+      - ./env/minirag/.env
     volumes:
       - fastapi_data:/app/assets
 
@@ -44,7 +44,7 @@ services:
     volumes:
       - pgvector_data:/var/lib/postgresql/data
     env_file:
-      - ./env/postgres/.env.postgres
+      - ./env/postgres/.env
     networks:
       - backend
     restart: always
@@ -63,7 +63,7 @@ services:
     volumes:
       - mongodb:/data/db
     env_file:
-      - ./env/mongodb/.env.mongodb
+      - ./env/mongodb/.env
     networks:
       - backend
     restart: always
@@ -115,7 +115,7 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
     env_file:
-      - ./env/grafana/.env.grafana
+      - ./env/grafana/.env
     depends_on:
       - prometheus
     networks:
@@ -148,7 +148,7 @@ services:
     ports:
       - "9187:9187"
     env_file:
-      - ./env/pg_exporter/.env.pg-exporter
+      - ./env/pg_exporter/.env
     networks:
       - backend
     depends_on:
@@ -163,13 +163,52 @@ services:
     ports:
       - "9216:9216"
     env_file:
-      - ./env/mongo_exporter/.env.mongo-exporter
+      - ./env/mongo_exporter/.env
     networks:
       - backend
     depends_on:
       mongodb:
         condition: service_healthy
     restart: always
+
+# RabbitMQ (Message Broker)
+  rabbitmq:
+    image: rabbitmq:4.1.2-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"     # AMQP port
+      - "15672:15672"   # Management UI port
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+    env_file:
+      - ./env/rabbitmq/.env
+    networks:
+      - backend
+    restart: always
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      timeout: 10s
+      retries: 5
+
+  # Redis (Results Backend & Cache)
+  redis:
+    image: redis:8.0.3-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    env_file:
+      - ./env/redis/.env
+    networks:
+      - backend
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      timeout: 10s
+      retries: 5
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD:-minirag_redis_2222}"]
 
 
 networks:
@@ -183,3 +222,5 @@ volumes:
   qdrant_data:
   prometheus_data:
   grafana_data:
+  rabbitmq_data:
+  redis_data:

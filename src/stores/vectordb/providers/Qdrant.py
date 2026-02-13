@@ -9,12 +9,14 @@ from models.db_schemas import RetrievedDocument
 class Qdrant(VectorDBInterface):
     def __init__(self, 
                  db_path: str, 
+                 db_url: str,
                  distance_metric: str,
                  default_vector_size: int,
                  *args, **kwargs):
         
         self.client = None
         self.db_path = db_path
+        self.db_url = db_url
         self.distance_metric = None
         self.default_vector_size = default_vector_size
         
@@ -29,6 +31,10 @@ class Qdrant(VectorDBInterface):
         self.logger = logging.getLogger('uvicorn')
         
     async def connect(self):
+        if self.db_url:
+            self.client = QdrantClient(url=self.db_url)
+            return
+        
         self.client = QdrantClient(path=self.db_path)
     
     async def disconnect(self):

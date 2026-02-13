@@ -832,6 +832,26 @@
           "body": "{\n    \"message\": \"Answer generated successfully for project with ID '1'.\",\n    \"answer\": \"نعم، يُظهر السيرة الذاتية أن صاحبها يدرس ويعمل في مجالات الذكاء الاصطناعي التوليدي ووكلاء الذكاء الاصطناعي.  \\n- **الذكاء الاصطناعي التوليدي:** خبرة في Generative AI، شهادات في Generative AI Specialist، تدريب على GANs و diffusion models.  \\n- **وكلاء الذكاء الاصطناعي:** تصميم بنية برمجية لتفاعل عقد AI (AI node interaction) في مشروع Backend Developer، ما يشير إلى عمل مع وكلاء أو وحدات ذكاء اصطناعي.\",\n    \"full_prompt\": \"## المستند رقم: 1\\n### المحتوى: • \\nSoft skills: Research, Leadership, Problem Solving, Communication, Time Management, Critical Thinking \\n• \\nLanguages: Arabic (Native), English (Fluent) \\nExtracurricular Activities \\nData Scientist | IEEE Zagazig SB | Link  \\n \\n \\n \\n \\n \\nMar 2023 – Oct 2023 \\nExploratory Data Analysis, worked on Descriptive & Inferential Statistics, Visualization, Data Cleaning, Feature Engineering,\\n## المستند رقم: 2\\n### المحتوى: Mohamed K. Nafea | AI Engineer \\n+20 1129330746 | Zagazig, Egypt | Email: monafe301@gmail.com | GitHub: github.com/MoNafea01 | \\nLinkedIn: linkedin.com/in/monafea01 | Kaggle: kaggle.com/mohamednafea01 | Military Status: Exempted \\nSummary \\nResult-oriented AI Engineer specializing in Generative AI and complex Computer Vision systems. Proven expertise in\\n## المستند رقم: 3\\n### المحتوى: - \\nRanked among the Top10 Graduation projects out of 200+ at the Egypt IOT & AI Challenge \\nBackend Developer \\n- \\nDesigned the Overall Software Architecture (Service & Repository Layers) for modular AI node interaction.  \\n- \\nImplemented Backend using Django RESTful framework, enabling scalable and secure API-driven workflows. \\n-\\n## المستند رقم: 4\\n### المحتوى: Training & Internships \\n• \\nArtificial Intelligence Engineer Path | IBM | Remote \\n \\n \\n \\nMar 2025 – Jun 2025 \\nGained hands-on experience with machine learning algorithms, deep learning architectures, and advanced frameworks \\nincluding TensorFlow, Keras, and PyTorch. Covered regression & classification, transformers, GANs, diffusion models, \\nreinforcement learning, and optimization techniques. \\n•\\n## المستند رقم: 5\\n### المحتوى: Data Modeling, Supervised Machine Learning, Advanced Learning Algorithms, and Unsupervised Learning. \\nCertificates \\n• \\nArtificial Intelligence Engineer Path | IBM | Link \\n• \\nGenerative AI Specialist | DEPI | Link \\n• \\nSupervised Machine Learning | DeepLearning.AI | Link \\n• \\nMachine Learning for Data Analysis | NTI | Link\\n\\nبناءً فقط على المستندات المذكورة أعلاه، يرجى توليد إجابة للمستخدم.\\n## السؤال:\\nهل صاحب السيرة الذاتية يذاكر حاجات متعلقة بالذكاء الاصطناعى التوليدي و وكلاء الذكاء الاصطناعى\\n\\n## الإجابة:\",\n    \"chat_history\": [\n        {\n            \"role\": \"system\",\n            \"content\": \"أنت مساعد لتوليد رد للمستخدم.\\nستحصل على مجموعة من المستندات المرتبطة باستفسار المستخدم.\\nعليك توليد رد بناءً على المستندات المقدمة.\\nتجاهل المستندات التي لا تتعلق باستفسار المستخدم.\\nيمكنك الاعتذار للمستخدم إذا لم تتمكن من توليد رد.\\nعليك توليد الرد بنفس لغة استفسار المستخدم.\\nكن مؤدباً ومحترماً في التعامل مع المستخدم.\\nكن دقيقًا ومختصرًا في ردك. تجنب المعلومات غير الضرورية.\"\n        }\n    ]\n}"
         }
       ]
+    },
+    {
+      "name": "send_reports",
+      "id": "f9ee4f6b-e911-4a18-9917-352e1d0d6eee",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{api}}/api/v1/send_reports",
+          "host": [
+            "{{api}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "send_reports"
+          ]
+        }
+      },
+      "response": []
     }
   ],
   "variable": [
