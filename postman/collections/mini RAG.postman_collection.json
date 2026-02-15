@@ -523,6 +523,92 @@
       ]
     },
     {
+      "name": "process-and-push",
+      "id": "54168ccd-a798-408d-b28a-1cee41c9e801",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"chunk_size\": 1024,\r\n    \"overlap_size\": 50,\r\n    \"do_reset\": 1\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{api}}/api/v1/data/process-and-push/8",
+          "host": [
+            "{{api}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "data",
+            "process-and-push",
+            "8"
+          ]
+        }
+      },
+      "response": [
+        {
+          "id": "f324b9c8-bdfc-4d72-b6b0-abeae8a04584",
+          "name": "process-and-push",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"chunk_size\": 1024,\r\n    \"overlap_size\": 50,\r\n    \"do_reset\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{api}}/api/v1/data/process-and-push/8",
+              "host": [
+                "{{api}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "data",
+                "process-and-push",
+                "8"
+              ]
+            }
+          },
+          "status": "Accepted",
+          "code": 202,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "date",
+              "value": "Sun, 15 Feb 2026 15:02:15 GMT"
+            },
+            {
+              "key": "server",
+              "value": "uvicorn"
+            },
+            {
+              "key": "content-length",
+              "value": "144"
+            },
+            {
+              "key": "content-type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "responseTime": "2026-02-15T15:07:58.969Z",
+          "body": "{\n    \"message\": \"Data processing then pushing workflow has been initiated.\",\n    \"task_id\": \"337d900a-e93f-4b77-b3f8-f4dfe062419f\",\n    \"task_status\": \"PENDING\"\n}"
+        }
+      ]
+    },
+    {
       "name": "index_info",
       "id": "52967564-2175-45e4-9212-267987cfcf15",
       "protocolProfileBehavior": {

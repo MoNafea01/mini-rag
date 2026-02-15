@@ -9,23 +9,69 @@ from helpers.utils import message_handler
 from models.db_schemas.SchemaFactory import SchemaFactory
 from models.enums import ResponseMessage, AssetTypeEnum
 from models import ModelFactory
+from utils.idempotency_manager import IdempotencyManager
 
 logger = logging.getLogger("celery.task")
 
 @celery_app.task(bind=True, 
-                 name="tasks.file_processing.process_data",
-                 autoretry_for=(Exception,),
+                name="tasks.file_processing.process_data",
+                autoretry_for=(Exception,),
                 retry_kwargs={'max_retries': 3, 'countdown': 60}
             )
 def process_data(self, project_id, asset_name, chunk_size, overlap_size, do_reset):
     return asyncio.run(_process_data(self, project_id, asset_name, chunk_size, overlap_size, do_reset))
 
 async def _process_data(task_instance, project_id, asset_name, chunk_size, overlap_size, do_reset):
-    # Access Celery context for connections
-    ctx = await get_setup_utils()
-    
     try:
+        # Access Celery context for connections
+        ctx = await get_setup_utils()
         settings = get_settings()
+        
+        idempotency_manager = IdempotencyManager(db_client=ctx.db_client, db_engine=ctx.db_engine, db_type=ctx.DB_TYPE)
+        task_args = {
+            "project_id": project_id,
+            "asset_name": asset_name,
+            "chunk_size": chunk_size,
+            "overlap_size": overlap_size,
+            "do_reset": do_reset
+        }
+        task_name = "tasks.file_processing.process_data"
+        
+        should_execute, existing_task = await idempotency_manager.should_execute_task(
+            task_name=task_name,
+            task_args=task_args,
+            task_id=task_instance.request.id,
+            task_time_limit=settings.CELERY_TASK_TIME_LIMIT
+        )
+        
+        if not should_execute:
+            logger.warning(f"Can not handle th task | status: {existing_task.status}")
+            return existing_task.result
+        
+        task_record = None
+        if existing_task:
+            # Update existing task with new celery task ID
+            await idempotency_manager.update_task_status(
+                execution_id=idempotency_manager.get_task_record_id(existing_task),
+                status='PENDING'
+            )
+            task_record = existing_task
+        else:
+            # Create new task record
+            task_record = await idempotency_manager.create_task_record(
+                task_name=task_name,
+                task_args=task_args,
+                task_id=task_instance.request.id
+            )
+        
+        task_record_id = idempotency_manager.get_task_record_id(task_record)
+        
+        # Update status to STARTED
+        await idempotency_manager.update_task_status(
+            execution_id=task_record_id,
+            status='STARTED'
+        )
+    
         project_model = await ModelFactory.create_project_model(
             db_type=settings.DB_TYPE,
             db_client=ctx.db_client
@@ -61,7 +107,17 @@ async def _process_data(task_instance, project_id, asset_name, chunk_size, overl
                     status_code=status.HTTP_404_NOT_FOUND
                 )
                 
-                raise Exception("File not found for processing")
+                # Update task status to FAILURE
+                await idempotency_manager.update_task_status(
+                    execution_id=task_record_id,
+                    status='FAILURE',
+                    result=message_handler(ResponseMessage.FILE_NOT_FOUND_FOR_PROCESSING.value.format(
+                        asset_name=asset_name,
+                        project_id=project.project_id
+                        ))
+                    )
+                
+                raise Exception(f"File not found for processing: {asset_name}")
 
                 
             project_files = [asset_record]
@@ -81,7 +137,14 @@ async def _process_data(task_instance, project_id, asset_name, chunk_size, overl
                 )
             )
             
-            raise Exception("No files found for processing")
+            # Update task status to FAILURE
+            await idempotency_manager.update_task_status(
+                execution_id=task_record_id,
+                status='FAILURE',
+                result=message_handler(ResponseMessage.NO_FILES_FOUND_FOR_PROCESSING.value.format(project_id=project.project_id))
+            )
+            
+            raise Exception(f"No files found for processing: {project.project_id}")
 
         # project_files_names = list(map(lambda x: x.asset_name, project_files))
 
@@ -152,12 +215,20 @@ async def _process_data(task_instance, project_id, asset_name, chunk_size, overl
             names=files_names,
             records_count=no_records,
             processed_files=no_files,
-            warnings=warnings
+            warnings=warnings,
+            project_id=project_id,
+            do_reset=do_reset
         )
         
         task_instance.update_state(
             state="SUCCESS",
             meta=message
+        )
+        
+        await idempotency_manager.update_task_status(
+            execution_id=task_record_id,
+            status='SUCCESS',
+            result=message
         )
         
         return message

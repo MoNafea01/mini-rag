@@ -117,6 +117,30 @@ class SchemaFactory:
         else:
             raise ValueError(f"Unsupported database type: {db_type}")
     
+    def get_celery_task_execution_schema(db_type: Union[DatabaseType, str]) -> Type:
+        """
+        Get the CeleryTaskExecution schema class for the specified database type.
+        
+        Args:
+            db_type: Database type (DatabaseType enum or string 'mongodb'/'postgres')
+            
+        Returns:
+            CeleryTaskExecution schema class
+            
+        Raises:
+            ValueError: If database type is not supported
+        """
+        if isinstance(db_type, str):
+            db_type = DatabaseType(db_type.lower())
+        
+        if db_type == DatabaseType.MONGODB:
+            from .minirag_mongo.schemas import CeleryTaskExecution
+            return CeleryTaskExecution
+        elif db_type == DatabaseType.POSTGRES:
+            from .minirag.schemas import CeleryTaskExecution
+            return CeleryTaskExecution
+        else:
+            raise ValueError(f"Unsupported database type: {db_type}")
     
     @staticmethod
     def get_all_schemas(db_type: Union[DatabaseType, str]) -> dict:
@@ -132,7 +156,8 @@ class SchemaFactory:
                 'Project': Project schema class,
                 'Asset': Asset schema class,
                 'DataChunk': DataChunk schema class,
-                'RetrievedDocument': RetrievedDocument schema class (if available)
+                'RetrievedDocument': RetrievedDocument schema class (if available),
+                'CeleryTaskExecution': CeleryTaskExecution schema class
             }
             
         Raises:
@@ -142,6 +167,7 @@ class SchemaFactory:
             'Project': SchemaFactory.get_project_schema(db_type),
             'Asset': SchemaFactory.get_asset_schema(db_type),
             'DataChunk': SchemaFactory.get_chunk_schema(db_type),
+            'CeleryTaskExecution': SchemaFactory.get_celery_task_execution_schema(db_type),
         }
         
         # Add RetrievedDocument if available

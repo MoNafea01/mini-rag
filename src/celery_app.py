@@ -19,6 +19,7 @@ class CeleryContext:
         self.embedding_client = None
         self.vectordb_client = None
         self.template_parser = None
+        self.DB_TYPE = settings.DB_TYPE
 
 async def get_setup_utils():
     settings = get_settings()
@@ -83,7 +84,10 @@ celery_app = Celery(
     backend=settings.CELERY_RESULT_BACKEND,
     include=[
         "tasks.mail_service",
-        "tasks.file_processing"
+        "tasks.file_processing",
+        "tasks.data_indexing",
+        "tasks.process_workflow",
+        "tasks.maintenance",
     ]
 )
 
@@ -114,8 +118,22 @@ celery_app.conf.update(
     
     task_routes={
         "tasks.mail_service.send_email_reports": {"queue": "mail_server_queue"}, 
-        "tasks.file_processing.process_data": {"queue": "data_processing_queue"}
+        "tasks.file_processing.process_data": {"queue": "data_processing_queue"},
+        "tasks.data_indexing.index_data": {"queue": "data_indexing_queue"},
+        "tasks.process_workflow.process_and_push_workflow": {"queue": "process_push_workflow_queue"},
+        "tasks.process_workflow.push_task": {"queue": "data_indexing_queue"},
+        "tasks.maintenance.clean_celery_executions_table": {"queue": "default"},
     },
+    
+    beat_schedule={
+        'cleanup-old-task-records': {
+            'task': "tasks.maintenance.clean_celery_executions_table",
+            'schedule': 1 * 60 * 60,  # every hour
+            'args': ()
+        }
+    },
+    timezone='UTC',
+
 )
 
 celery_app.conf.default_queue = "default"

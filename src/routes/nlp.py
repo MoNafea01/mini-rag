@@ -1,6 +1,5 @@
 from typing import List, Union
 import logging
-from tqdm.auto import tqdm
 from fastapi import APIRouter, Depends, status, Request
 from fastapi.responses import JSONResponse
 
@@ -12,6 +11,7 @@ from controllers import NLPController
 from models.enums import ResponseMessage
 from helpers.utils import message_handler
 from models.db_schemas import RetrievedDocument 
+from tasks.data_indexing import index_data as index_data_task
 
 
 logger = logging.getLogger('uvicorn.error')
@@ -35,88 +35,16 @@ async def index_project(request: Request,
                 content={"message": "Project ID must be a number"},
                 status_code=status.HTTP_400_BAD_REQUEST
             )
-    
-    
-    project_model = await ModelFactory.create_project_model(
-        db_type=app_settings.DB_TYPE,
-        db_client=request.app.db_client
-    )
-    
-    project = await project_model.get_project_or_create_one(project_id=project_id)
-    
-    if not project:
-        return JSONResponse(
-            content=message_handler(ResponseMessage.PROJECT_NOT_FOUND.value.format(project_id=project_id)),
-            status_code=status.HTTP_404_NOT_FOUND
-        )
-    
-    chunk_model = await ModelFactory.create_chunk_model(
-        db_type=app_settings.DB_TYPE,
-        db_client=request.app.db_client
-    )
-    
-    nlp_controller = NLPController(
-        vectordb_client=request.app.vectordb_client,
-        generation_client=request.app.generation_client,
-        embedding_client=request.app.embedding_client,
-        template_parser=request.app.template_parser
-    )
-    
-    collection_name = nlp_controller.generate_collection_name(project_id=project.project_id)
-    
-    await request.app.vectordb_client.create_collection(
-        collection_name=collection_name,
-        embedding_size=nlp_controller.embedding_client.embedding_size,
+    task = index_data_task.delay(
+        project_id=project_id, 
         do_reset=push_request.do_reset
     )
     
-    pg_num = 1
-    pg_size = 50
-    inserted_count = 0
-    idx  = 0
-    is_first_batch = True
-    
-    total_chunks_count = await chunk_model.count_chunks_by_project(project_id=project.project_id)
-    pbar = tqdm(
-        total=total_chunks_count, 
-        desc=f"Indexing Project {project_id} into VectorDB", 
-        unit="chunk",
-        position=0,
-    )
-    
-    while True:
-        paged_chunks = await chunk_model.get_project_chunks(project_id=project.project_id, page=pg_num, page_size=pg_size)
-        
-        if not paged_chunks or len(paged_chunks) == 0:
-            break
-        
-        chunks_ids = [c.chunk_id for c in paged_chunks]
-        
-        # Only reset on first batch
-        do_reset_batch = push_request.do_reset if is_first_batch else False
-        
-        is_inserted = await nlp_controller.index_into_vector_db(
-            project=project, 
-            chunks=paged_chunks, 
-            chunks_ids=chunks_ids
-        )
-        
-        if not is_inserted:
-            return JSONResponse(
-                content=message_handler(ResponseMessage.VECTOR_DB_INDEXING_FAILED.value.format(project_id=project_id)),
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-        
-        pbar.update(len(paged_chunks))
-        inserted_count += len(paged_chunks)
-        idx += len(paged_chunks)
-        pg_num += 1
-        is_first_batch = False
-    
     return JSONResponse(
-        content=message_handler(ResponseMessage.VECTOR_DB_INDEXING_SUCCESS.value.format(project_id=project_id), inserted_count=inserted_count),
-        status_code=status.HTTP_200_OK
+        content={"message": "Data indexing task has been initiated", "task_id": task.id, "task_status": task.status},
+        status_code=status.HTTP_202_ACCEPTED
     )
+    
 
 
 @nlp_router.get("/index/info/{project_id}")

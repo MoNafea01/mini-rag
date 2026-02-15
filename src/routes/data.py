@@ -14,6 +14,7 @@ from models.db_schemas import SchemaFactory
 from .schemas import ProcessRequest
 
 from tasks.file_processing import process_data as process_data_task
+from tasks.process_workflow import process_and_push_workflow
 
 logger = logging.getLogger('uvicorn.error')
 
@@ -146,5 +147,39 @@ async def process_data(request: Request,
     
     return JSONResponse(
         content={ "message": "Data processing task has been initiated.", "task_id": task.id, "task_status": task.status }, 
+        status_code=status.HTTP_202_ACCEPTED 
+    )
+
+
+@data_router.post("/process-and-push/{project_id}")
+async def process_and_push(request: Request, 
+                       project_id: Union[int, str], 
+                       process_request: ProcessRequest,
+                       app_settings: Settings = Depends(get_settings)):
+    
+    if app_settings.DB_TYPE == DatabaseType.POSTGRES.value:
+        try:
+            project_id = int(project_id)
+        except ValueError:
+            return JSONResponse(
+                content={"message": "Project ID must be a number"},
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
+    
+    asset_name = process_request.asset_name
+    chunk_size = process_request.chunk_size
+    overlap_size = process_request.overlap_size
+    do_reset = process_request.do_reset
+    
+    task = process_and_push_workflow.delay(
+        project_id=project_id,
+        asset_name=asset_name, 
+        chunk_size=chunk_size, 
+        overlap_size=overlap_size, 
+        do_reset=do_reset
+    )
+    
+    return JSONResponse(
+        content={ "message": "Data processing then pushing workflow has been initiated.", "task_id": task.id, "task_status": task.status }, 
         status_code=status.HTTP_202_ACCEPTED 
     )
